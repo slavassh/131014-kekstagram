@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Вячеслав Шестаков](https://up.htmlacademy.ru/javascript/6/user/131014).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Наумов](https://htmlacademy.ru/profile/id194254).
 
 ---
 
