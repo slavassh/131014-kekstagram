@@ -1,29 +1,22 @@
 'use strict';
 
 function getMessage(a, b) {
-  if (typeof a === 'object' && typeof b === 'object') {
+  if (Array.isArray(a) && Array.isArray(b)) {
     var artifactsSquare = 0;
     for (var i = 0; i < a.length; i++) {
       artifactsSquare += a[i] * b[i];
     }
     return 'Общая площадь артефактов сжатия: ' + artifactsSquare + ' пикселей';
-  }
-
-  switch (typeof a) {
-    case 'boolean':
-      if (a) {
-        return 'Переданное GIF-изображение анимировано и содержит ' + b + ' кадров';
-      }
-      return 'Переданное GIF-изображение не анимировано';
-
-    case 'number':
-      return 'Переданное SVG-изображение содержит ' + a + ' объектов и ' + b * 4 + ' атрибутов';
-
-    case 'object':
-      var amountOfRedPoints = 0;
-      for (var i = 0; i < a.length; i++) {
-        amountOfRedPoints += a[i];
-      }
-      return 'Количество красных точек во всех строчках изображения: ' + amountOfRedPoints;
+  } else if (Array.isArray(a)) {
+    var amountOfRedPoints = a.reduce(function(previous, next) {
+      return previous + next;
+    });
+    return 'Количество красных точек во всех строчках изображения: ' + amountOfRedPoints;
+  } else if (a === true) {
+    return 'Переданное GIF-изображение анимировано и содержит ' + b + ' кадров';
+  } else if (a === false) {
+    return 'Переданное GIF-изображение не анимировано';
+  } else if (typeof a === 'number') {
+    return 'Переданное SVG-изображение содержит ' + a + ' объектов и ' + b * 4 + ' атрибутов';
   }
 }
