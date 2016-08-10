@@ -134,11 +134,23 @@
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
 
-      this._ctx.strokeRect(
+/*      this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
+
+      var startPointX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      var startPointY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      var rigthTopPointX = this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2;
+      var rigthTopPointY = -this._resizeConstraint.side / 2 - this._ctx.lineWidth;
+      this._ctx.fillStyle = '#ffe753';
+      this._ctx.beginPath();
+      for (var i = startPointX; i < rigthTopPointX; i += 15) {
+        this._ctx.arc(i, startPointY, 3, 0, 2 * Math.PI);
+      }
+      this._ctx.fill();
+
 
       this._ctx.fillStyle = 'white';
       this._ctx.font = '18px Open Sans';
