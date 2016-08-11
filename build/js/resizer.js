@@ -112,27 +112,6 @@
 
       this._ctx.drawImage(this._image, displX, displY);
 
-/*    Версия решения через path
-
-      this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
-      this._ctx.beginPath();
-      this._ctx.moveTo(displX, displY);
-      this._ctx.lineTo(displX + this._container.width, displY);
-      this._ctx.lineTo(displX + this._container.width, displY + this._container.height);
-      this._ctx.lineTo(displX, displY + this._container.height);
-      this._ctx.lineTo(displX, displY);
-      this._ctx.moveTo(-this._resizeConstraint.side / 2 - this._ctx.lineWidth,
-                      -this._resizeConstraint.side / 2 - this._ctx.lineWidth);
-      this._ctx.lineTo(this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
-                      -this._resizeConstraint.side / 2 - this._ctx.lineWidth);
-      this._ctx.lineTo(this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
-                      this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2);
-      this._ctx.lineTo(-this._resizeConstraint.side / 2 - this._ctx.lineWidth,
-                      this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2);
-      this._ctx.lineTo(-this._resizeConstraint.side / 2 - this._ctx.lineWidth,
-                      -this._resizeConstraint.side / 2 - this._ctx.lineWidth);
-      this._ctx.fill('evenodd');*/
-
       this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
 
       this._ctx.beginPath();
