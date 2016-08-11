@@ -112,13 +112,15 @@
 
       this._ctx.drawImage(this._image, displX, displY);
 
+/*    Версия решения через path
+
       this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
       this._ctx.beginPath();
-      this._ctx.moveTo(-this._container.width / 2, -this._container.height / 2);
-      this._ctx.lineTo(this._container.width / 2, -this._container.height / 2);
-      this._ctx.lineTo(this._container.width / 2, this._container.height / 2);
-      this._ctx.lineTo(-this._container.width / 2, this._container.height / 2);
-      this._ctx.lineTo(-this._container.width / 2, -this._container.height / 2);
+      this._ctx.moveTo(displX, displY);
+      this._ctx.lineTo(displX + this._container.width, displY);
+      this._ctx.lineTo(displX + this._container.width, displY + this._container.height);
+      this._ctx.lineTo(displX, displY + this._container.height);
+      this._ctx.lineTo(displX, displY);
       this._ctx.moveTo(-this._resizeConstraint.side / 2 - this._ctx.lineWidth,
                       -this._resizeConstraint.side / 2 - this._ctx.lineWidth);
       this._ctx.lineTo(this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
@@ -129,10 +131,18 @@
                       this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2);
       this._ctx.lineTo(-this._resizeConstraint.side / 2 - this._ctx.lineWidth,
                       -this._resizeConstraint.side / 2 - this._ctx.lineWidth);
-      this._ctx.fill('evenodd');
+      this._ctx.fill('evenodd');*/
 
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
+      this._ctx.fillStyle = 'rgba(0, 0, 0, .8)';
+
+      this._ctx.beginPath();
+      this._ctx.rect(displX, displY, this._container.width, this._container.height);
+      this._ctx.rect(
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+        (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+        this._resizeConstraint.side + this._ctx.lineWidth / 2,
+        this._resizeConstraint.side + this._ctx.lineWidth / 2);
+      this._ctx.fill('evenodd');
 
       this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
