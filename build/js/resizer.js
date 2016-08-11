@@ -142,15 +142,18 @@
 
       var startPointX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
       var startPointY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
-      var rigthTopPointX = this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2;
+      var endPoint = this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2;
       var rigthTopPointY = -this._resizeConstraint.side / 2 - this._ctx.lineWidth;
+      var j = startPointY;
       this._ctx.fillStyle = '#ffe753';
-      this._ctx.beginPath();
-      for (var i = startPointX; i < rigthTopPointX; i += 15) {
+      for (var i = startPointX; i < endPoint; i += 15) {
+        this._ctx.beginPath();
+        this._ctx.arc(startPointX, i, 3, 0, 2 * Math.PI);
+        this._ctx.fill();
+        this._ctx.beginPath();
         this._ctx.arc(i, startPointY, 3, 0, 2 * Math.PI);
+        this._ctx.fill();
       }
-      this._ctx.fill();
-
 
       this._ctx.fillStyle = 'white';
       this._ctx.font = '18px Open Sans';
