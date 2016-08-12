@@ -123,11 +123,36 @@
         this._resizeConstraint.side + this._ctx.lineWidth / 2);
       this._ctx.fill('evenodd');
 
-      this._ctx.strokeRect(
+      // Отрисовка прямоугольника, обозначающего область изображения после
+      // кадрирования. Координаты задаются от центра.
+
+/*      this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
+
+      var startPoint = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      var endPoint = this._resizeConstraint.side / 2 - this._ctx.lineWidth;
+      var DOT_RADIUS = 3;
+      var DOT_MARGIN = 12;
+      var integerIterations = Math.round((this._resizeConstraint.side - DOT_RADIUS * 2) / (DOT_RADIUS * 2 + DOT_MARGIN));
+      var correctMargin = ((this._resizeConstraint.side - DOT_RADIUS * 2) % (DOT_RADIUS * 2 + DOT_MARGIN)) / integerIterations;
+      this._ctx.fillStyle = '#ffe753';
+      for (var i = startPoint; i < endPoint; i += (DOT_MARGIN + correctMargin)) {
+        this._ctx.beginPath();
+        this._ctx.arc(startPoint, i, DOT_RADIUS, 0, 2 * Math.PI);
+        this._ctx.fill();
+        this._ctx.beginPath();
+        this._ctx.arc(i, startPoint, DOT_RADIUS, 0, 2 * Math.PI);
+        this._ctx.fill();
+        this._ctx.beginPath();
+        this._ctx.arc(endPoint, i, DOT_RADIUS, 0, 2 * Math.PI);
+        this._ctx.fill();
+        this._ctx.beginPath();
+        this._ctx.arc(i, endPoint, DOT_RADIUS, 0, 2 * Math.PI);
+        this._ctx.fill();
+      }
 
       this._ctx.fillStyle = 'white';
       this._ctx.font = '18px Open Sans';
