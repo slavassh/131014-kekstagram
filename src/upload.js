@@ -74,16 +74,21 @@
 
 
   function resizeFormIsValid() {
-    var fieldLeft = document.querySelector('#resize-x');
-    var fieldTop = document.querySelector('#resize-y');
-    var fieldSide = document.querySelector('#resize-size');
+    var fieldLeft = +document.querySelector('#resize-x').value;
+    var fieldTop = +document.querySelector('#resize-y').value;
+    var fieldSide = +document.querySelector('#resize-size').value;
 
-    console.log(fieldLeft.value);
-    console.log(fieldTop.value);
-    console.log(fieldSide.value);
+    console.log(fieldLeft);
+    console.log(fieldTop);
+    console.log(fieldSide);
+    console.log(currentResizer._image.naturalWidth);
+    console.log(currentResizer._image.naturalHeight);
+    console.log(fieldLeft + fieldSide);
+    console.log(fieldTop + fieldSide);
 
-
-    return true;
+    if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
+        fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
+        fieldTop >= 0 && fieldLeft >= 0) return true;
   }
 
   /**
