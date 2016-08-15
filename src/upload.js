@@ -71,7 +71,18 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
+
+
   function resizeFormIsValid() {
+    var fieldLeft = document.querySelector('#resize-x');
+    var fieldTop = document.querySelector('#resize-y');
+    var fieldSide = document.querySelector('#resize-size');
+
+    console.log(fieldLeft.value);
+    console.log(fieldTop.value);
+    console.log(fieldSide.value);
+
+
     return true;
   }
 
