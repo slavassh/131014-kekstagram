@@ -79,19 +79,19 @@
     } else if (resizeFormIsValid() && buttonFwd.disabled) {
       buttonFwd.disabled = false;
     }
-  }
+  };
 
   document.querySelector('#resize-x').onchange = function() {
     changeButtonAttribute();
-  }
+  };
 
   document.querySelector('#resize-y').onchange = function() {
     changeButtonAttribute();
-  }
+  };
 
   document.querySelector('#resize-size').onchange = function() {
     changeButtonAttribute();
-  }
+  };
 
   function resizeFormIsValid() {
     var fieldLeft = +document.querySelector('#resize-x').value;
@@ -100,7 +100,10 @@
 
     if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
         fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
-        fieldTop >= 0 && fieldLeft >= 0) return true;
+        fieldTop >= 0 && fieldLeft >= 0) {
+      return true;
+    }
+    return false;
   }
 
   /**
