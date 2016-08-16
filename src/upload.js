@@ -71,20 +71,33 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
+  var buttonFwd = document.querySelector('#resize-fwd');
 
+  var changeButtonAttribute = function() {
+    if (!resizeFormIsValid() && !buttonFwd.disabled) {
+      buttonFwd.disabled = true;
+      console.log(buttonFwd.disabled);
+    } else if (resizeFormIsValid() && buttonFwd.disabled) {
+      buttonFwd.disabled = false;
+    }
+  }
+
+  document.querySelector('#resize-x').onchange = function() {
+    changeButtonAttribute();
+  }
+
+  document.querySelector('#resize-y').onchange = function() {
+    changeButtonAttribute();
+  }
+
+  document.querySelector('#resize-size').onchange = function() {
+    changeButtonAttribute();
+  }
 
   function resizeFormIsValid() {
     var fieldLeft = +document.querySelector('#resize-x').value;
     var fieldTop = +document.querySelector('#resize-y').value;
     var fieldSide = +document.querySelector('#resize-size').value;
-
-    console.log(fieldLeft);
-    console.log(fieldTop);
-    console.log(fieldSide);
-    console.log(currentResizer._image.naturalWidth);
-    console.log(currentResizer._image.naturalHeight);
-    console.log(fieldLeft + fieldSide);
-    console.log(fieldTop + fieldSide);
 
     if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
         fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
@@ -206,6 +219,7 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
+
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
 
