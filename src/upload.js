@@ -76,7 +76,6 @@
   var changeButtonAttribute = function() {
     if (!resizeFormIsValid() && !buttonFwd.disabled) {
       buttonFwd.disabled = true;
-      console.log(buttonFwd.disabled);
     } else if (resizeFormIsValid() && buttonFwd.disabled) {
       buttonFwd.disabled = false;
     }
