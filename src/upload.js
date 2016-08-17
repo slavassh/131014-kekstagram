@@ -7,6 +7,8 @@
 
 'use strict';
 
+var browserCookies = require('browser-cookies');
+
 (function() {
   /** @enum {string} */
   var FileType = {
@@ -244,6 +246,7 @@
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
+
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
@@ -274,6 +277,15 @@
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
+
+    var today = new Date();
+    var birthdayHopper = new Date(today.getFullYear(), 11, 9);
+
+    if (today < birthdayHopper) {
+      birthdayHopper = birthdayHopper.setFullYear(today.getFullYear() - 1);
+    }
+
+    browserCookies.set('upload-filter', selectedFilter, {expires: (today - birthdayHopper) / 1000 / 60 / 60 / 24});
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
