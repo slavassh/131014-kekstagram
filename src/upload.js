@@ -33,11 +33,6 @@ var browserCookies = require('browser-cookies');
   var fileRegExp = new RegExp('^image/(' + Object.keys(FileType).join('|').replace('\+', '\\+') + ')$', 'i');
 
   /**
-   * @type {Object.<string, string>}
-   */
-  var filterMap;
-
-  /**
    * Объект, который занимается кадрированием изображения.
    * @type {Resizer}
    */
@@ -126,7 +121,7 @@ var browserCookies = require('browser-cookies');
 
   if (browserCookies.get('upload-filter')) {
     document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
-    filterImage.className = 'filter-image-preview filter-' + browserCookies.get('upload-filter');
+    changeClassname(browserCookies.get('upload-filter'));
   }
 
   /**
@@ -278,22 +273,11 @@ var browserCookies = require('browser-cookies');
    * выбранному значению в форме.
    */
 
-
+  function changeClassname(filterName) {
+    filterImage.className = 'filter-image-preview filter-' + filterName;
+  }
 
   filterForm.onchange = function() {
-
-    if (!filterMap) {
-      // Ленивая инициализация. Объект не создается до тех пор, пока
-      // не понадобится прочитать его в первый раз, а после этого запоминается
-      // навсегда.
-      filterMap = {
-        'none': 'filter-none',
-        'chrome': 'filter-chrome',
-        'sepia': 'filter-sepia',
-        'marvin': 'filter-marvin'
-      };
-    }
-
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
@@ -303,7 +287,7 @@ var browserCookies = require('browser-cookies');
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
-    filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+    changeClassname(selectedFilter);
   };
 
   cleanupResizer();
