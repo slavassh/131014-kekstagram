@@ -268,7 +268,6 @@ var browserCookies = require('browser-cookies');
     updateBackground();
 
     browserCookies.set('upload-filter', savedFilter, {expires: currentBirthdayHopper()});
-    console.log(currentBirthdayHopper());
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
