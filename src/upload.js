@@ -43,6 +43,8 @@ var browserCookies = require('browser-cookies');
    */
   var currentResizer;
 
+  var savedFilter;
+
   /**
    * Удаляет текущий объект {@link Resizer}, чтобы создать новый с другим
    * изображением.
@@ -227,6 +229,8 @@ var browserCookies = require('browser-cookies');
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+      document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
+      debugger;
     }
   };
 
@@ -247,11 +251,25 @@ var browserCookies = require('browser-cookies');
    * @param {Event} evt
    */
 
+  var currentBirthdayHopper = function() {
+    var today = new Date();
+    var birthdayHopper = new Date(today.getFullYear(), 11, 9);
+
+    if (today < birthdayHopper) {
+      birthdayHopper = birthdayHopper.setFullYear(today.getFullYear() - 1);
+    }
+    return (today - birthdayHopper) / 1000 / 60 / 60 / 24;
+  };
+
+  console.log(currentBirthdayHopper());
+
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
     cleanupResizer();
     updateBackground();
+
+    browserCookies.set('upload-filter', savedFilter, {expires: currentBirthdayHopper()});
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
@@ -261,6 +279,7 @@ var browserCookies = require('browser-cookies');
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
+
   filterForm.onchange = function() {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
@@ -278,14 +297,7 @@ var browserCookies = require('browser-cookies');
       return item.checked;
     })[0].value;
 
-    var today = new Date();
-    var birthdayHopper = new Date(today.getFullYear(), 11, 9);
-
-    if (today < birthdayHopper) {
-      birthdayHopper = birthdayHopper.setFullYear(today.getFullYear() - 1);
-    }
-
-    browserCookies.set('upload-filter', selectedFilter, {expires: (today - birthdayHopper) / 1000 / 60 / 60 / 24});
+    savedFilter = selectedFilter;
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
