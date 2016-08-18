@@ -230,7 +230,6 @@ var browserCookies = require('browser-cookies');
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
       document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
-      debugger;
     }
   };
 
@@ -261,7 +260,6 @@ var browserCookies = require('browser-cookies');
     return (today - birthdayHopper) / 1000 / 60 / 60 / 24;
   };
 
-  console.log(currentBirthdayHopper());
 
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
@@ -270,6 +268,7 @@ var browserCookies = require('browser-cookies');
     updateBackground();
 
     browserCookies.set('upload-filter', savedFilter, {expires: currentBirthdayHopper()});
+    console.log(currentBirthdayHopper());
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
