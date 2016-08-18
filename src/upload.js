@@ -43,8 +43,6 @@ var browserCookies = require('browser-cookies');
    */
   var currentResizer;
 
-  var savedFilter;
-
   /**
    * Удаляет текущий объект {@link Resizer}, чтобы создать новый с другим
    * изображением.
@@ -125,6 +123,11 @@ var browserCookies = require('browser-cookies');
    * @type {HTMLElement}
    */
   var uploadMessage = document.querySelector('.upload-message');
+
+  if (browserCookies.get('upload-filter')) {
+    document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
+    filterImage.className = 'filter-image-preview filter-' + browserCookies.get('upload-filter');
+  }
 
   /**
    * @param {Action} action
@@ -229,7 +232,6 @@ var browserCookies = require('browser-cookies');
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
-      document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
     }
   };
 
@@ -267,8 +269,6 @@ var browserCookies = require('browser-cookies');
     cleanupResizer();
     updateBackground();
 
-    browserCookies.set('upload-filter', savedFilter, {expires: currentBirthdayHopper()});
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
@@ -278,7 +278,10 @@ var browserCookies = require('browser-cookies');
    * выбранному значению в форме.
    */
 
+
+
   filterForm.onchange = function() {
+
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -295,7 +298,7 @@ var browserCookies = require('browser-cookies');
       return item.checked;
     })[0].value;
 
-    savedFilter = selectedFilter;
+    browserCookies.set('upload-filter', selectedFilter, {expires: currentBirthdayHopper()});
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
