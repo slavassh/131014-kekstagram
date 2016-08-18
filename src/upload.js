@@ -73,24 +73,12 @@
    */
   var buttonFwd = document.querySelector('#resize-fwd');
 
-  var changeButtonAttribute = function() {
+  document.querySelector('.upload-resize-controls').onchange = function() {
     if (!resizeFormIsValid() && !buttonFwd.disabled) {
       buttonFwd.disabled = true;
     } else if (resizeFormIsValid() && buttonFwd.disabled) {
       buttonFwd.disabled = false;
     }
-  };
-
-  document.querySelector('#resize-x').onchange = function() {
-    changeButtonAttribute();
-  };
-
-  document.querySelector('#resize-y').onchange = function() {
-    changeButtonAttribute();
-  };
-
-  document.querySelector('#resize-size').onchange = function() {
-    changeButtonAttribute();
   };
 
   function resizeFormIsValid() {
