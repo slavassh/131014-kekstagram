@@ -71,8 +71,27 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
+  var buttonFwd = document.querySelector('#resize-fwd');
+
+  document.querySelector('.upload-resize-controls').onchange = function() {
+    if (!resizeFormIsValid() && !buttonFwd.disabled) {
+      buttonFwd.disabled = true;
+    } else if (resizeFormIsValid() && buttonFwd.disabled) {
+      buttonFwd.disabled = false;
+    }
+  };
+
   function resizeFormIsValid() {
-    return true;
+    var fieldLeft = +document.querySelector('#resize-x').value;
+    var fieldTop = +document.querySelector('#resize-y').value;
+    var fieldSide = +document.querySelector('#resize-size').value;
+
+    if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
+        fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
+        fieldTop >= 0 && fieldLeft >= 0) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -190,6 +209,7 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
+
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
 
