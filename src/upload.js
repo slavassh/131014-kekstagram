@@ -125,7 +125,7 @@ var browserCookies = require('browser-cookies');
   var uploadMessage = document.querySelector('.upload-message');
 
   if (browserCookies.get('upload-filter')) {
-    document.querySelector('#upload-filter-' + browserCookies.get('upload-filter')).checked = true;
+    filterForm.elements['upload-filter'].value = browserCookies.get('upload-filter');
     changeClassname(browserCookies.get('upload-filter'));
   }
 
