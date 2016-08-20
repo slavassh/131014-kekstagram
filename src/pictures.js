@@ -6,6 +6,22 @@
 
 var pictures = [];
 
-var createCallback = function () {
+var getData = function(callData) {
+  return callData;
+};
 
-}
+var createCallback = function(src, func) {
+  var elemScript = document.createElement('script');
+  elemScript.src = src;
+  document.body.appendChild(elemScript);
+
+  window.JSONPCallback = function(data) {
+    pictures = func(data);
+    console.log(pictures);
+  };
+  return getData;
+};
+
+console.log(pictures);
+
+createCallback('api/pictures?callback=JSONPCallback', getData);
