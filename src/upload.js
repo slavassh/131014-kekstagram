@@ -7,6 +7,8 @@
 
 'use strict';
 
+var browserCookies = require('browser-cookies');
+
 (function() {
   /** @enum {string} */
   var FileType = {
@@ -121,6 +123,11 @@
    * @type {HTMLElement}
    */
   var uploadMessage = document.querySelector('.upload-message');
+
+  if (browserCookies.get('upload-filter')) {
+    filterForm.elements['upload-filter'].value = browserCookies.get('upload-filter');
+    changeClassname(browserCookies.get('upload-filter'));
+  }
 
   /**
    * @param {Action} action
@@ -244,6 +251,18 @@
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
+
+  var currentBirthdayHopper = function() {
+    var today = new Date();
+    var birthdayHopper = new Date(today.getFullYear(), 11, 9);
+
+    if (today < birthdayHopper) {
+      birthdayHopper = birthdayHopper.setFullYear(today.getFullYear() - 1);
+    }
+    return (today - birthdayHopper) / 1000 / 60 / 60 / 24;
+  };
+
+
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
@@ -258,7 +277,8 @@
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
-  filterForm.onchange = function() {
+
+  function changeClassname(filterName) {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -270,15 +290,22 @@
         'marvin': 'filter-marvin'
       };
     }
+    filterImage.className = 'filter-image-preview ' + filterMap[filterName];
+  }
+
+  filterForm.onchange = function() {
 
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
 
+    browserCookies.set('upload-filter', selectedFilter, {expires: currentBirthdayHopper()});
+
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
-    filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+
+    changeClassname(selectedFilter);
   };
 
   cleanupResizer();
