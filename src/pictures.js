@@ -17,11 +17,8 @@ var createCallback = function(src, func) {
 
   window.JSONPCallback = function(data) {
     pictures = func(data);
-    console.log(pictures);
+    return pictures;
   };
-  return getData;
 };
-
-console.log(pictures);
 
 createCallback('api/pictures?callback=JSONPCallback', getData);
