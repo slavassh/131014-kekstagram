@@ -6,12 +6,8 @@
 
 var pictures = [];
 var filtersMenuForm = document.forms[0];
-console.log(filtersMenuForm);
-debugger;
-
 var picturesContainer = document.querySelector('.pictures');
 var elemTemplate = document.querySelector('#picture-template');
-console.log(elemTemplate);
 
 var createCallback = function(src, func) {
   var elemScript = document.createElement('script');
@@ -32,15 +28,10 @@ var getData = function(callData) {
     getPictureElement(picture, picturesContainer);
   });
 
-  return pictures;
+  filtersMenuForm.classList.remove('hidden');
 };
 
-function createPhoto() {
-  createCallback('api/pictures?callback=JSONPCallback', getData);
-  console.log(pictures);
-  debugger;
-}
-createPhoto();
+var IMAGE_LOAD_TIMEOUT = 10000;
 
 var elemToClone;
 
@@ -52,11 +43,34 @@ if ('content' in elemTemplate) {
 
 var getPictureElement = function(data, container) {
   var elem = elemToClone.cloneNode(true);
+  var imgElem = elem.querySelector('img');
+  var tileImage = new Image();
+  var tileTimeout;
+
   container.appendChild(elem);
+
+  tileImage.onload = function() {
+    clearTimeout(tileTimeout);
+    imgElem.src = tileImage.src;
+    imgElem.width = 182;
+    imgElem.height = 182;
+  };
+
+  tileImage.onerror = function() {
+    elem.classList.add('picture-load-failure');
+  };
+
+  tileImage.src = data.url;
+
+  tileTimeout = setTimeout(function() {
+    tileImage.src = '';
+    elem.classList.add('picture-load-failure');
+  }, IMAGE_LOAD_TIMEOUT);
+
   return elem;
-  console.log(elem);
 };
 
+createCallback('api/pictures?callback=JSONPCallback', getData);
 
 
 
