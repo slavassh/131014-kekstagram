@@ -9,6 +9,7 @@ var filtersMenuForm = document.forms[0];
 var picturesContainer = document.querySelector('.pictures');
 var elemTemplate = document.querySelector('#picture-template');
 
+
 var createCallback = function(src, func) {
   var elemScript = document.createElement('script');
   elemScript.src = src;
@@ -34,6 +35,7 @@ var addImageList = function(callData) {
 };
 
 var IMAGE_LOAD_TIMEOUT = 10000;
+
 
 var elemToClone;
 
@@ -71,6 +73,7 @@ var getPictureElement = function(data, elem) {
 };
 
 createCallback('api/pictures?callback=JSONPCallback', addImageList);
+
 
 
 
