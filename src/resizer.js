@@ -94,9 +94,9 @@
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
+      // this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+      // this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       this._ctx.save();
@@ -135,7 +135,22 @@
       var correctMargin = (fullSideLength - (integerIterations + 1) * this._ctx.lineWidth) / integerIterations
           + this._ctx.lineWidth;
 
-      this._ctx.fillStyle = '#ffe753';
+/*      this._ctx.beginPath();
+      this._ctx.moveTo(startPoint, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2 + 20);
+      this._ctx.lineTo(startPoint + 20, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2);
+      this._ctx.lineTo(startPoint + 40, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2 + 20);
+      this._ctx.stroke();
+      debugger;*/
+
+      function drawBend(x, y) {
+        this._ctx.beginPath();
+        this._ctx.moveTo(x, y + 20);
+        this._ctx.lineTo(x + 20, y);
+        this._ctx.lineTo(x + 40, y + 20);
+      }
+      drawBend(startPoint, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2);
+
+/*      this._ctx.fillStyle = '#ffe753';
       while (startPoint < this._resizeConstraint.side / 2 - this._ctx.lineWidth) {
         this._ctx.beginPath();
         this._ctx.arc(startPoint, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
@@ -155,7 +170,7 @@
         this._ctx.fill();
         startPoint += correctMargin;
         endPoint -= correctMargin;
-      }
+      }*/
 
       this._ctx.fillStyle = 'white';
       this._ctx.font = '18px Open Sans';
