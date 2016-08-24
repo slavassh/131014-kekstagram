@@ -7,9 +7,7 @@
 
 'use strict';
 
-var browserCookies = require('browser-cookies');
-
-(function() {
+define(function() {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -24,6 +22,8 @@ var browserCookies = require('browser-cookies');
     UPLOADING: 1,
     CUSTOM: 2
   };
+
+  var browserCookies = require('browser-cookies');
 
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
@@ -310,4 +310,4 @@ var browserCookies = require('browser-cookies');
 
   cleanupResizer();
   updateBackground();
-})();
+});
