@@ -92,11 +92,6 @@
       this._ctx.lineWidth = 6;
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
-      // Размер штрихов. Первый элемент массива задает длину штриха, второй
-      // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       this._ctx.save();
@@ -126,36 +121,36 @@
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
 
-      var DOT_MARGIN = 6;
-      var startPoint = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
-      var endPoint = this._resizeConstraint.side / 2 - this._ctx.lineWidth;
+      var BEND_STEP = 20;
 
-      var fullSideLength = this._resizeConstraint.side + this._ctx.lineWidth / 2;
-      var integerIterations = Math.round((fullSideLength - this._ctx.lineWidth) / (this._ctx.lineWidth + DOT_MARGIN));
-      var correctMargin = (fullSideLength - (integerIterations + 1) * this._ctx.lineWidth) / integerIterations
-          + this._ctx.lineWidth;
+      var fullSideLength = this._resizeConstraint.side - this._ctx.lineWidth / 2;
+      var integerIterations = Math.round((fullSideLength - this._ctx.lineWidth) / (BEND_STEP * 2));
+      var correctStep = fullSideLength / integerIterations / 2;
+
+      var x = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      var y = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2 + correctStep;
 
       this._ctx.fillStyle = '#ffe753';
-      while (startPoint < this._resizeConstraint.side / 2 - this._ctx.lineWidth) {
-        this._ctx.beginPath();
-        this._ctx.arc(startPoint, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-            this._ctx.lineWidth / 2, 0, 2 * Math.PI);
-        this._ctx.fill();
-        this._ctx.beginPath();
-        this._ctx.arc(this._resizeConstraint.side / 2 - this._ctx.lineWidth, startPoint,
-            this._ctx.lineWidth / 2, 0, 2 * Math.PI);
-        this._ctx.fill();
-        this._ctx.beginPath();
-        this._ctx.arc(endPoint, this._resizeConstraint.side / 2 - this._ctx.lineWidth,
-            this._ctx.lineWidth / 2, 0, 2 * Math.PI);
-        this._ctx.fill();
-        this._ctx.beginPath();
-        this._ctx.arc((-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2, endPoint,
-            this._ctx.lineWidth / 2, 0, 2 * Math.PI);
-        this._ctx.fill();
-        startPoint += correctMargin;
-        endPoint -= correctMargin;
+      this._ctx.beginPath();
+      this._ctx.moveTo(x, y);
+      while (x < this._resizeConstraint.side / 2 - this._ctx.lineWidth * 2) {
+        this._ctx.lineTo(x += correctStep, y -= correctStep);
+        this._ctx.lineTo(x += correctStep, y += correctStep);
       }
+      while (y < this._resizeConstraint.side / 2 - this._ctx.lineWidth * 2 - correctStep) {
+        this._ctx.lineTo(x -= correctStep, y += correctStep);
+        this._ctx.lineTo(x += correctStep, y += correctStep);
+      }
+      while (x > -(this._resizeConstraint.side / 2 - this._ctx.lineWidth * 2)) {
+        this._ctx.lineTo(x -= correctStep, y += correctStep);
+        this._ctx.lineTo(x -= correctStep, y -= correctStep);
+      }
+      while (y > -(this._resizeConstraint.side / 2 - this._ctx.lineWidth * 2 - correctStep)) {
+        this._ctx.lineTo(x += correctStep, y -= correctStep);
+        this._ctx.lineTo(x -= correctStep, y -= correctStep);
+      }
+      this._ctx.closePath();
+      this._ctx.stroke();
 
       this._ctx.fillStyle = 'white';
       this._ctx.font = '18px Open Sans';
