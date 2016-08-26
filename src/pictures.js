@@ -19,13 +19,15 @@ var createCallback = function(src, func) {
   };
 };
 
-var getData = function(callData) {
+var addImageList = function(callData) {
   pictures = callData;
 
   filtersMenuForm.classList.add('hidden');
 
   pictures.forEach(function(picture) {
-    getPictureElement(picture, picturesContainer);
+    var element = elemToClone.cloneNode(true);
+    picturesContainer.appendChild(element);
+    getPictureElement(picture, element);
   });
 
   filtersMenuForm.classList.remove('hidden');
@@ -41,13 +43,10 @@ if ('content' in elemTemplate) {
   elemToClone = elemTemplate.querySelector('.picture');
 }
 
-var getPictureElement = function(data, container) {
-  var elem = elemToClone.cloneNode(true);
+var getPictureElement = function(data, elem) {
   var imgElem = elem.querySelector('img');
   var tileImage = new Image();
   var tileTimeout;
-
-  container.appendChild(elem);
 
   tileImage.onload = function() {
     clearTimeout(tileTimeout);
@@ -57,6 +56,7 @@ var getPictureElement = function(data, container) {
   };
 
   tileImage.onerror = function() {
+    clearTimeout(tileTimeout);
     elem.classList.add('picture-load-failure');
   };
 
@@ -70,7 +70,7 @@ var getPictureElement = function(data, container) {
   return elem;
 };
 
-createCallback('api/pictures?callback=JSONPCallback', getData);
+createCallback('api/pictures?callback=JSONPCallback', addImageList);
 
 
 
