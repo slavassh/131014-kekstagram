@@ -50,9 +50,9 @@ var getPictureElement = function(data, elem) {
 
   tileImage.onload = function() {
     clearTimeout(tileTimeout);
-    imgElem.src = tileImage.src;
-    imgElem.width = 182;
-    imgElem.height = 182;
+    elem.replaceChild(tileImage, imgElem);
+    tileImage.width = 182;
+    tileImage.height = 182;
   };
 
   tileImage.onerror = function() {
