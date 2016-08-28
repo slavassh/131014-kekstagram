@@ -1,5 +1,3 @@
-/* global Resizer: true */
-
 /**
  * @fileoverview
  * @author Igor Alexeenko (o0)
@@ -7,9 +5,7 @@
 
 'use strict';
 
-var browserCookies = require('browser-cookies');
-
-(function() {
+define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -310,4 +306,4 @@ var browserCookies = require('browser-cookies');
 
   cleanupResizer();
   updateBackground();
-})();
+});
