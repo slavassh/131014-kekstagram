@@ -354,5 +354,5 @@ define(function() {
     this.y = y;
   };
 
-  window.Resizer = Resizer;
+  return Resizer;
 });

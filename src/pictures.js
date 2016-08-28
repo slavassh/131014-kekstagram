@@ -8,6 +8,14 @@ define(['./load', './picture'], function(load, getPicture) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
+  var elemTemplate = document.querySelector('#picture-template');
+  var elemToClone;
+
+  if ('content' in elemTemplate) {
+    elemToClone = elemTemplate.content.querySelector('.picture');
+  } else {
+    elemToClone = elemTemplate.querySelector('.picture');
+  }
 
   var addImageList = function(callData) {
     pictures = callData;

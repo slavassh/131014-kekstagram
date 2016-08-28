@@ -7,7 +7,7 @@
 
 'use strict';
 
-define(function() {
+define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -22,8 +22,6 @@ define(function() {
     UPLOADING: 1,
     CUSTOM: 2
   };
-
-  var browserCookies = require('browser-cookies');
 
   /**
    * Регулярное выражение, проверяющее тип загружаемого файла. Составляется
