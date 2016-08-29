@@ -3,10 +3,10 @@
  */
 'use strict';
 
-define(function() {
+define(['./gallery'], function(Gallery) {
   var IMAGE_LOAD_TIMEOUT = 10000;
 
-  var getPictureElement = function(data, elem) {
+  var getPictureElement = function(data, elem, activeNumber) {
     var imgElem = elem.querySelector('img');
     var tileImage = new Image();
     var tileTimeout;
@@ -16,6 +16,11 @@ define(function() {
       elem.replaceChild(tileImage, imgElem);
       tileImage.width = 182;
       tileImage.height = 182;
+    };
+
+    tileImage.onclick = function() {
+      Gallery.show(activeNumber);
+      Gallery.setActivePicture(activeNumber);
     };
 
     tileImage.onerror = function() {
