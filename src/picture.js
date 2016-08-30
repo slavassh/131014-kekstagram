@@ -21,6 +21,7 @@ define(['./gallery'], function(Gallery) {
     tileImage.onclick = function() {
       Gallery.show(activeNumber);
       Gallery.setActivePicture(activeNumber);
+      return false;
     };
 
     tileImage.onerror = function() {

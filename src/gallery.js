@@ -13,14 +13,12 @@ define(function() {
     this.likesCount = document.querySelector('.likes-count');
 
     this.galleryOverlayImage.onclick = function() {
-      self.onImageClick;
+      self.onImageClick();
     };
 
     this.galleryOverlayClose.onclick = function() {
-      self.onCloseClick;
+      self.onCloseClick();
     };
-
-
   };
 
   Gallery.prototype.setPictures = function(picturesArr) {
@@ -44,11 +42,15 @@ define(function() {
   };
 
   Gallery.prototype.onImageClick = function() {
-    this.hide();
+    if(this.activePicture < this.pictures.length - 1) {
+      this.setActivePicture(this.activePicture + 1);
+    } else {
+      this.setActivePicture(0);
+    }
   };
 
   Gallery.prototype.onCloseClick = function() {
-    this.setActivePicture();
+    this.hide();
   };
 
   return new Gallery();
