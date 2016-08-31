@@ -5,20 +5,11 @@
 
 define(function() {
   var Gallery = function() {
-    var self = this;
     this.galleryOverlay = document.querySelector('.gallery-overlay');
     this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
     this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
     this.commentsCount = document.querySelector('.comments-count');
     this.likesCount = document.querySelector('.likes-count');
-
-    this.galleryOverlayImage.onclick = function() {
-      self.onImageClick();
-    };
-
-    this.galleryOverlayClose.onclick = function() {
-      self.onCloseClick();
-    };
   };
 
   Gallery.prototype.setPictures = function(picturesArr) {
@@ -26,12 +17,21 @@ define(function() {
   };
 
   Gallery.prototype.show = function(activeNumber) {
+    var self = this;
     this.galleryOverlay.classList.remove('invisible');
     this.setActivePicture(activeNumber);
+    this.galleryOverlayImage.onclick = function() {
+      self.onImageClick();
+    };
+    this.galleryOverlayClose.onclick = function() {
+      self.onCloseClick();
+    };
   };
 
   Gallery.prototype.hide = function() {
     this.galleryOverlay.classList.add('invisible');
+    this.galleryOverlayImage.onclick = null;
+    this.galleryOverlayClose.onclick = null;
   };
 
   Gallery.prototype.setActivePicture = function(activeNumber) {
