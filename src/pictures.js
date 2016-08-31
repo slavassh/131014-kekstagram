@@ -4,7 +4,7 @@
 
 'use strict';
 
-define(['./load', './picture', './gallery'], function(load, getPicture, Gallery) {
+define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
@@ -25,7 +25,7 @@ define(['./load', './picture', './gallery'], function(load, getPicture, Gallery)
     pictures.forEach(function(picture, i) {
       var element = elemToClone.cloneNode(true);
       picturesContainer.appendChild(element);
-      getPicture(picture, element, i);
+      element = new Picture(picture, element, i);
     });
 
     filtersMenuForm.classList.remove('hidden');
