@@ -4,11 +4,19 @@
 'use strict';
 
 define(['./gallery'], function(Gallery) {
-  var Picture = function(data, elem, activeNumber) {
+  var Picture = function(data, activeNumber) {
     this.data = data;
-    this.element = elem;
     var self = this;
     var IMAGE_LOAD_TIMEOUT = 10000;
+    this.elemTemplate = document.querySelector('#picture-template');
+
+    if ('content' in this.elemTemplate) {
+      this.elemToClone = this.elemTemplate.content.querySelector('.picture');
+    } else {
+      this.elemToClone = this.elemTemplate.querySelector('.picture');
+    }
+
+    this.element = this.elemToClone.cloneNode(true);
 
     this.imgElem = this.element.querySelector('img');
     this.tileImage = new Image();
@@ -37,7 +45,6 @@ define(['./gallery'], function(Gallery) {
   Picture.prototype.onImageClick = function(activePicture) {
     Gallery.show(activePicture);
     Gallery.setActivePicture(activePicture);
-    debugger;
   };
 
   Picture.prototype.onImageLoad = function() {
