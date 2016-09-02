@@ -15,3 +15,14 @@ define(function() {
   };
   return createCallback;
 });
+
+var getPicturesData = function(url, options, callback) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.onload = function() {
+    callback();
+  };
+
+  xhr.open('GET', url);
+  xhr.send();
+};
