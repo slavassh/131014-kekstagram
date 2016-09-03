@@ -4,25 +4,25 @@
 'use strict';
 
 define(function() {
-  var createCallback = function(src, func) {
-    var elemScript = document.createElement('script');
-    elemScript.src = src;
-    document.body.appendChild(elemScript);
+  var getPicturesData = function(url, options, callback) {
+    var xhr = new XMLHttpRequest();
 
-    window.JSONPCallback = function(data) {
-      return func(data);
+    xhr.onload = function(evt) {
+      console.log(evt);
+      var data = JSON.parse(evt.target.response);
+      return callback(data);
     };
+
+    xhr.open('GET', url +
+      '?from=' + (options.from || 0) +
+      '&to=' + (options.to || Infinity) +
+      '&filter=' + (options.filter || 'default'));
+    xhr.send();
+    console.log(url +
+      '?from=' + (options.from || 0) +
+      '&?to=' + (options.to || Infinity) +
+      '&?filter=' + (options.filter || 'default'));
+    debugger;
   };
-  return createCallback;
+  return getPicturesData;
 });
-
-var getPicturesData = function(url, options, callback) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.onload = function() {
-    callback();
-  };
-
-  xhr.open('GET', url);
-  xhr.send();
-};
