@@ -16,12 +16,12 @@ define(function() {
     xhr.open('GET', url +
       '?from=' + (options.from || 0) +
       '&to=' + (options.to || Infinity) +
-      '&filter=' + (options.filter || 'default'));
+      '&filter=' + (options.filter || 'filter-popular'));
     xhr.send();
     console.log(url +
       '?from=' + (options.from || 0) +
       '&?to=' + (options.to || Infinity) +
-      '&?filter=' + (options.filter || 'default'));
+      '&?filter=' + (options.filter || 'filter-popular'));
     debugger;
   };
   return getPicturesData;
