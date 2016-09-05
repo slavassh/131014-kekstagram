@@ -35,7 +35,6 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
 
   var loadPictures = function(loadPageNumber, loadFilter) {
     pageNumber++;
-    debugger;
     return load(LOAD_URL, {
       from: loadPageNumber * pageSize,
       to: loadPageNumber * pageSize + pageSize,
