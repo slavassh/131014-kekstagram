@@ -8,7 +8,6 @@ define(function() {
     var xhr = new XMLHttpRequest();
 
     xhr.onload = function(evt) {
-      console.log(evt);
       var data = JSON.parse(evt.target.response);
       return callback(data);
     };
@@ -18,11 +17,6 @@ define(function() {
       '&to=' + (options.to || Infinity) +
       '&filter=' + (options.filter || 'filter-popular'));
     xhr.send();
-    console.log(url +
-      '?from=' + (options.from || 0) +
-      '&?to=' + (options.to || Infinity) +
-      '&?filter=' + (options.filter || 'filter-popular'));
-    debugger;
   };
   return getPicturesData;
 });

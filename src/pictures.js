@@ -9,14 +9,14 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
   var footer = document.querySelector('footer');
-  var startPosition = 0;
+  var pageNumber = 0;
   var pageSize = 12;
-  var endPosition = 12;
   var currentFilter = 'filter-popular';
-  var lastCall;
+  var lastCall = Date.now();
 
   var FULL_THROTTLE = 100;
   var GAP = 100;
+  var LOAD_URL = 'api/pictures';
 
   var addImageList = function(callData) {
     pictures = callData;
@@ -33,41 +33,43 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     return Gallery.setPictures(pictures);
   };
 
+  var loadPictures = function(loadPageNumber, loadFilter) {
+    return load(LOAD_URL, {
+      from: loadPageNumber * pageSize,
+      to: loadPageNumber * pageSize + pageSize,
+      filter: loadFilter}, addImageList);
+  };
+
   var toggleFilter = function(filterID) {
     picturesContainer.innerHTML = '';
-    startPosition = 0;
-    load('api/pictures', {
-      from: startPosition,
-      to: endPosition,
-      filter: filterID}, addImageList);
+    pageNumber = 0;
+    currentFilter = filterID;
+    loadPictures(pageNumber, currentFilter);
   };
 
   filtersMenuForm.addEventListener('click', function(evt) {
     if(evt.target.classList.contains('filters-item')) {
       toggleFilter(evt.target.htmlFor);
-      console.log(evt.target.htmlFor);
-      debugger;
     }
   });
-
-  load('api/pictures', {
-    from: startPosition,
-    to: startPosition + pageSize,
-    filter: currentFilter}, addImageList);
 
   window.addEventListener('scroll', function() {
     if(Date.now() - lastCall >= FULL_THROTTLE) {
-      console.log('throttle');
-      if(footer.getBoundingClientRect().bottom - window.innerHeight < GAP) {
-        load('api/pictures', {
-          from: startPosition += pageSize,
-          to: endPosition += pageSize,
-          filter: currentFilter}, addImageList);
+      if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
+        loadPictures(pageNumber++, currentFilter);
       }
+      lastCall = Date.now();
     }
-    lastCall = Date.now();
   });
 
+  var loadFullHeight = function() {
+    loadPictures(pageNumber, currentFilter);
+/*    while (picturesContainer.getBoundingClientRect().bottom - window.innerHeight < 0) {
+      loadPictures(pageNumber++, currentFilter);
+    }*/
+  };
+
+  loadFullHeight();
 });
 
 

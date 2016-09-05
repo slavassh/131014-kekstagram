@@ -6,14 +6,15 @@ module.exports = function(list, filterID) {
       return list;
 
     case 'filter-new':
-      return list.sort(function(a, b) {
-        return a.created - b.created;
+      return list.filter(function(item) {
+        return item.created > Date.now() - 1000 * 60 * 60 * 24 * 3;
+      }).sort(function(a, b) {
+        return b.created - a.created;
       });
 
     case 'filter-discussed':
       return list.sort(function(a, b) {
-        return a.comments - b.comments;
+        return b.comments - a.comments;
       });
   }
-  return list;
 };
