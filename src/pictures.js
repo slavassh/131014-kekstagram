@@ -34,6 +34,8 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   };
 
   var loadPictures = function(loadPageNumber, loadFilter) {
+    pageNumber++;
+    debugger;
     return load(LOAD_URL, {
       from: loadPageNumber * pageSize,
       to: loadPageNumber * pageSize + pageSize,
@@ -56,7 +58,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   window.addEventListener('scroll', function() {
     if(Date.now() - lastCall >= FULL_THROTTLE) {
       if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
-        loadPictures(pageNumber++, currentFilter);
+        loadPictures(pageNumber, currentFilter);
       }
       lastCall = Date.now();
     }
