@@ -69,20 +69,11 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
-  var buttonFwd = document.querySelector('#resize-fwd');
-
-  document.querySelector('.upload-resize-controls').addEventListener('change', function() {
-    if (!resizeFormIsValid() && !buttonFwd.disabled) {
-      buttonFwd.disabled = true;
-    } else if (resizeFormIsValid() && buttonFwd.disabled) {
-      buttonFwd.disabled = false;
-    }
-  });
 
   function resizeFormIsValid() {
-    var fieldLeft = +document.querySelector('#resize-x').value;
-    var fieldTop = +document.querySelector('#resize-y').value;
-    var fieldSide = +document.querySelector('#resize-size').value;
+    var fieldLeft = +resizeForm.elements['resize-x'].value;
+    var fieldTop = +resizeForm.elements['resize-y'].value;
+    var fieldSide = +resizeForm.elements['resize-size'].value;
 
     if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
         fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
@@ -124,6 +115,26 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     filterForm.elements['upload-filter'].value = browserCookies.get('upload-filter');
     changeClassname(browserCookies.get('upload-filter'));
   }
+
+  var buttonFwd = resizeForm.querySelector('#resize-fwd');
+
+  function toggleButtonCondition() {
+    if (!resizeFormIsValid() && !buttonFwd.disabled) {
+      buttonFwd.disabled = true;
+    } else if (resizeFormIsValid() && buttonFwd.disabled) {
+      buttonFwd.disabled = false;
+    }
+  }
+
+  resizeForm.querySelector('.upload-resize-controls').addEventListener('change', function() {
+
+    currentResizer.setConstraint(
+      +resizeForm.elements['resize-x'].value,
+      +resizeForm.elements['resize-y'].value,
+      +resizeForm.elements['resize-size'].value);
+
+    toggleButtonCondition();
+  });
 
   /**
    * @param {Action} action
@@ -302,6 +313,17 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     // состояние или просто перезаписывать.
 
     changeClassname(selectedFilter);
+  });
+
+  function setResizeFormValues() {
+    resizeForm.elements['resize-x'].value = Math.round(currentResizer.getConstraint().x);
+    resizeForm.elements['resize-y'].value = Math.round(currentResizer.getConstraint().y);
+    resizeForm.elements['resize-size'].value = Math.round(currentResizer.getConstraint().side);
+  }
+
+  window.addEventListener('resizerchange', function() {
+    setResizeFormValues();
+    toggleButtonCondition();
   });
 
   cleanupResizer();
