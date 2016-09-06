@@ -4,18 +4,10 @@
 
 'use strict';
 
-define(['./load', './picture', './gallery'], function(load, getPicture, Gallery) {
+define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
-  var elemTemplate = document.querySelector('#picture-template');
-  var elemToClone;
-
-  if ('content' in elemTemplate) {
-    elemToClone = elemTemplate.content.querySelector('.picture');
-  } else {
-    elemToClone = elemTemplate.querySelector('.picture');
-  }
 
   var addImageList = function(callData) {
     pictures = callData;
@@ -23,9 +15,8 @@ define(['./load', './picture', './gallery'], function(load, getPicture, Gallery)
     filtersMenuForm.classList.add('hidden');
 
     pictures.forEach(function(picture, i) {
-      var element = elemToClone.cloneNode(true);
-      picturesContainer.appendChild(element);
-      getPicture(picture, element, i);
+      var pictureElement = new Picture(picture, i);
+      picturesContainer.appendChild(pictureElement.element);
     });
 
     filtersMenuForm.classList.remove('hidden');

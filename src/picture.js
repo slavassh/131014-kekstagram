@@ -4,39 +4,67 @@
 'use strict';
 
 define(['./gallery'], function(Gallery) {
-  var IMAGE_LOAD_TIMEOUT = 10000;
+  var Picture = function(data, activeNumber) {
+    this.data = data;
+    var self = this;
+    var IMAGE_LOAD_TIMEOUT = 10000;
+    this.elemTemplate = document.querySelector('#picture-template');
 
-  var getPictureElement = function(data, elem, activeNumber) {
-    var imgElem = elem.querySelector('img');
-    var tileImage = new Image();
-    var tileTimeout;
+    if ('content' in this.elemTemplate) {
+      this.elemToClone = this.elemTemplate.content.querySelector('.picture');
+    } else {
+      this.elemToClone = this.elemTemplate.querySelector('.picture');
+    }
 
-    tileImage.onload = function() {
-      clearTimeout(tileTimeout);
-      elem.replaceChild(tileImage, imgElem);
-      tileImage.width = 182;
-      tileImage.height = 182;
+    this.element = this.elemToClone.cloneNode(true);
+
+    this.imgElem = this.element.querySelector('img');
+    this.tileImage = new Image();
+
+    this.tileImage.onload = function() {
+      self.onImageLoad();
     };
 
-    tileImage.onclick = function() {
-      Gallery.show(activeNumber);
-      Gallery.setActivePicture(activeNumber);
+    this.tileImage.onerror = function() {
+      self.onImageError();
+    };
+
+    this.tileImage.onclick = function() {
+      self.onImageClick(activeNumber);
       return false;
     };
 
-    tileImage.onerror = function() {
-      clearTimeout(tileTimeout);
-      elem.classList.add('picture-load-failure');
-    };
+    this.tileImage.src = data.url;
 
-    tileImage.src = data.url;
-
-    tileTimeout = setTimeout(function() {
-      tileImage.src = '';
-      elem.classList.add('picture-load-failure');
+    this.tileTimeout = setTimeout(function() {
+      self.tileImage.src = '';
+      self.element.classList.add('picture-load-failure');
     }, IMAGE_LOAD_TIMEOUT);
-
-    return elem;
   };
-  return getPictureElement;
+
+  Picture.prototype.onImageClick = function(activePicture) {
+    Gallery.show(activePicture);
+    Gallery.setActivePicture(activePicture);
+  };
+
+  Picture.prototype.onImageLoad = function() {
+    clearTimeout(this.tileTimeout);
+    this.element.replaceChild(this.tileImage, this.imgElem);
+    this.tileImage.width = 182;
+    this.tileImage.height = 182;
+    this.remove();
+  };
+
+  Picture.prototype.onImageError = function() {
+    clearTimeout(this.tileTimeout);
+    this.element.classList.add('picture-load-failure');
+    this.remove();
+  };
+
+  Picture.prototype.remove = function() {
+    this.tileImage.onload = null;
+    this.tileImage.onerror = null;
+  };
+
+  return Picture;
 });
