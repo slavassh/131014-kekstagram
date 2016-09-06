@@ -4,7 +4,7 @@
 
 'use strict';
 
-define(['./load', './picture'], function(load, getPicture) {
+define(['./load', './picture', './gallery'], function(load, getPicture, Gallery) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
@@ -22,13 +22,15 @@ define(['./load', './picture'], function(load, getPicture) {
 
     filtersMenuForm.classList.add('hidden');
 
-    pictures.forEach(function(picture) {
+    pictures.forEach(function(picture, i) {
       var element = elemToClone.cloneNode(true);
       picturesContainer.appendChild(element);
-      getPicture(picture, element);
+      getPicture(picture, element, i);
     });
 
     filtersMenuForm.classList.remove('hidden');
+
+    return Gallery.setPictures(pictures);
   };
 
   load('api/pictures?callback=JSONPCallback', addImageList);
