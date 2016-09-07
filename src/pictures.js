@@ -13,7 +13,6 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var pageSize = 12;
   var currentFilter = 'filter-popular';
   var lastCall = Date.now();
-  var lastPage = pageSize;
 
   var FULL_THROTTLE = 100;
   var GAP = 100;
@@ -30,32 +29,21 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     }
   };
 
-  var getPicturesElements = function(picturesData) {
-    picturesData.forEach(function(picture, i) {
-      var pictureElement = new Picture(picture, i);
-      picturesContainer.appendChild(pictureElement.element);
-    });
-    return Gallery.setPictures(pictures);
-  };
-
   var addImageList = function(callData) {
     pictures = callData;
 
-    filtersMenuForm.classList.add('hidden');
-
-    getPicturesElements(pictures);
-
-    lastPage = pictures.length;
+    pictures.forEach(function(picture, i) {
+      var pictureElement = new Picture(picture, i);
+      picturesContainer.appendChild(pictureElement.element);
+    });
 
     console.log(pictures.length);
 
-    window.addEventListener('scroll', loadOnScroll);
 
     if(pictures.length < pageSize) {
       window.removeEventListener('scroll', loadOnScroll);
     }
-
-    filtersMenuForm.classList.remove('hidden');
+    return Gallery.setPictures(pictures);
   };
 
   var loadPictures = function(loadPageNumber, loadFilter) {
@@ -66,11 +54,19 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
       filter: loadFilter}, addImageList);
   };
 
+  var renderList = function() {
+    filtersMenuForm.classList.add('hidden');
+    loadPictures(pageNumber, currentFilter);
+    filtersMenuForm.classList.remove('hidden');
+    window.addEventListener('scroll', loadOnScroll);
+  };
+
+
   var toggleFilter = function(filterID) {
     picturesContainer.innerHTML = '';
     pageNumber = 0;
     currentFilter = filterID;
-    loadPictures(pageNumber, currentFilter);
+    return loadPictures(pageNumber, currentFilter);
   };
 
   filtersMenuForm.addEventListener('click', function(evt) {
@@ -79,13 +75,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     }
   });
 
-  var loadFullHeight = function() {
-    // while (lastPage === pageSize) {
-      loadPictures(pageNumber, currentFilter);
-      console.log('load');
-    // }
-  };
-  loadFullHeight();
+  return renderList();
 });
 
 
