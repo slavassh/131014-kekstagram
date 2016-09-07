@@ -13,24 +13,49 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var pageSize = 12;
   var currentFilter = 'filter-popular';
   var lastCall = Date.now();
+  var lastPage = pageSize;
 
   var FULL_THROTTLE = 100;
   var GAP = 100;
   var LOAD_URL = 'api/pictures';
+
+  var loadOnScroll = function() {
+    if(Date.now() - lastCall >= FULL_THROTTLE) {
+      if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
+        loadPictures(pageNumber, currentFilter);
+        console.log('scroll');
+      }
+      lastCall = Date.now();
+      console.log('scroll2');
+    }
+  };
+
+  var getPicturesElements = function(picturesData) {
+    picturesData.forEach(function(picture, i) {
+      var pictureElement = new Picture(picture, i);
+      picturesContainer.appendChild(pictureElement.element);
+    });
+    return Gallery.setPictures(pictures);
+  };
 
   var addImageList = function(callData) {
     pictures = callData;
 
     filtersMenuForm.classList.add('hidden');
 
-    pictures.forEach(function(picture, i) {
-      var pictureElement = new Picture(picture, i);
-      picturesContainer.appendChild(pictureElement.element);
-    });
+    getPicturesElements(pictures);
+
+    lastPage = pictures.length;
+
+    console.log(pictures.length);
+
+    window.addEventListener('scroll', loadOnScroll);
+
+    if(pictures.length < pageSize) {
+      window.removeEventListener('scroll', loadOnScroll);
+    }
 
     filtersMenuForm.classList.remove('hidden');
-
-    return Gallery.setPictures(pictures);
   };
 
   var loadPictures = function(loadPageNumber, loadFilter) {
@@ -54,22 +79,12 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     }
   });
 
-  window.addEventListener('scroll', function() {
-    if(Date.now() - lastCall >= FULL_THROTTLE) {
-      if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
-        loadPictures(pageNumber, currentFilter);
-      }
-      lastCall = Date.now();
-    }
-  });
-
   var loadFullHeight = function() {
-    loadPictures(pageNumber, currentFilter);
-/*    while (picturesContainer.getBoundingClientRect().bottom - window.innerHeight < 0) {
-      loadPictures(pageNumber++, currentFilter);
-    }*/
+    // while (lastPage === pageSize) {
+      loadPictures(pageNumber, currentFilter);
+      console.log('load');
+    // }
   };
-
   loadFullHeight();
 });
 
