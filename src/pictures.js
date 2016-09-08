@@ -13,6 +13,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var pageSize = 12;
   var currentFilter = 'filter-popular';
   var lastCall = Date.now();
+  var allPictures = [];
 
   var FULL_THROTTLE = 100;
   var GAP = 100;
@@ -22,10 +23,14 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     if(Date.now() - lastCall >= FULL_THROTTLE) {
       if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
         loadPictures(pageNumber, currentFilter);
-        console.log('scroll');
       }
       lastCall = Date.now();
-      console.log('scroll2');
+    }
+  };
+
+  var loadToFullPage = function() {
+    if(!(isNextPageAvailable()) && footer.getBoundingClientRect().bottom - window.innerHeight <= 0) {
+      loadPictures(pageNumber, currentFilter);
     }
   };
 
@@ -35,38 +40,35 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     pictures.forEach(function(picture, i) {
       var pictureElement = new Picture(picture, i);
       picturesContainer.appendChild(pictureElement.element);
+      allPictures.push(picture);
     });
 
-    console.log(pictures.length);
-
-
-    if(pictures.length < pageSize) {
+    if(isNextPageAvailable()) {
       window.removeEventListener('scroll', loadOnScroll);
     }
-    return Gallery.setPictures(pictures);
+    loadToFullPage();
+
+    return Gallery.setPictures(allPictures);
+  };
+
+  var isNextPageAvailable = function() {
+    return pictures.length < pageSize;
   };
 
   var loadPictures = function(loadPageNumber, loadFilter) {
     pageNumber++;
-    return load(LOAD_URL, {
+    load(LOAD_URL, {
       from: loadPageNumber * pageSize,
       to: loadPageNumber * pageSize + pageSize,
       filter: loadFilter}, addImageList);
   };
 
-  var renderList = function() {
-    filtersMenuForm.classList.add('hidden');
-    loadPictures(pageNumber, currentFilter);
-    filtersMenuForm.classList.remove('hidden');
-    window.addEventListener('scroll', loadOnScroll);
-  };
-
-
   var toggleFilter = function(filterID) {
     picturesContainer.innerHTML = '';
     pageNumber = 0;
     currentFilter = filterID;
-    return loadPictures(pageNumber, currentFilter);
+    loadPictures(pageNumber, currentFilter);
+    window.addEventListener('scroll', loadOnScroll);
   };
 
   filtersMenuForm.addEventListener('click', function(evt) {
@@ -75,7 +77,14 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     }
   });
 
-  return renderList();
+  var renderList = function() {
+    filtersMenuForm.classList.add('hidden');
+    loadPictures(pageNumber, currentFilter);
+    window.addEventListener('scroll', loadOnScroll);
+    filtersMenuForm.classList.remove('hidden');
+  };
+
+  renderList();
 });
 
 
