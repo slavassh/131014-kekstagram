@@ -65,6 +65,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
 
   var toggleFilter = function(filterID) {
     picturesContainer.innerHTML = '';
+    allPictures = [];
     pageNumber = 0;
     currentFilter = filterID;
     loadPictures(pageNumber, currentFilter);
