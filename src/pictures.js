@@ -10,7 +10,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var picturesContainer = document.querySelector('.pictures');
   var footer = document.querySelector('footer');
   var pageNumber = 0;
-  var pageSize = 4;
+  var pageSize = 12;
   var currentFilter = 'filter-popular';
   var lastCall = Date.now();
   var allPictures = [];
