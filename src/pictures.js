@@ -10,7 +10,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var picturesContainer = document.querySelector('.pictures');
   var footer = document.querySelector('footer');
   var pageNumber = 0;
-  var pageSize = 12;
+  var pageSize = 4;
   var currentFilter = 'filter-popular';
   var lastCall = Date.now();
   var allPictures = [];
@@ -37,10 +37,10 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var addImageList = function(callData) {
     pictures = callData;
 
-    pictures.forEach(function(picture, i) {
-      var pictureElement = new Picture(picture, i);
+    pictures.forEach(function(item) {
+      var pictureElement = new Picture(item, allPictures.length);
       picturesContainer.appendChild(pictureElement.element);
-      allPictures.push(picture);
+      allPictures.push(item);
     });
 
     if(isNextPageAvailable()) {
