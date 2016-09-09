@@ -70,18 +70,14 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * @return {boolean}
    */
 
-  function resizeFormIsValid() {
-    var fieldLeft = +resizeForm.elements['resize-x'].value;
-    var fieldTop = +resizeForm.elements['resize-y'].value;
-    var fieldSide = +resizeForm.elements['resize-size'].value;
-
-    if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
-        fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
-        fieldTop >= 0 && fieldLeft >= 0) {
+  var resizeFormIsValid = function() {
+    if (+fieldX.value + +fieldSide.value <= currentResizer._image.naturalWidth &&
+      +fieldY.value + +fieldSide.value <= currentResizer._image.naturalHeight &&
+      +fieldY.value >= 0 && +fieldX.value >= 0) {
       return true;
     }
     return false;
-  }
+  };
 
   /**
    * Форма загрузки изображения.
@@ -94,6 +90,16 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  var fieldX = resizeForm.elements['resize-x'];
+  var fieldY = resizeForm.elements['resize-y'];
+  var fieldSide = resizeForm.elements['resize-size'];
+
+  var setResizeFormValues = function() {
+    fieldX.value = Math.round(currentResizer.getConstraint().x);
+    fieldY.value = Math.round(currentResizer.getConstraint().y);
+    fieldSide.value = Math.round(currentResizer.getConstraint().side);
+  };
 
   /**
    * Форма добавления фильтра.
@@ -127,11 +133,10 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   }
 
   resizeForm.querySelector('.upload-resize-controls').addEventListener('change', function() {
-
     currentResizer.setConstraint(
-      +resizeForm.elements['resize-x'].value,
-      +resizeForm.elements['resize-y'].value,
-      +resizeForm.elements['resize-size'].value);
+      +fieldX.value,
+      +fieldY.value,
+      +fieldSide.value);
 
     toggleButtonCondition();
   });
@@ -315,11 +320,6 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     changeClassname(selectedFilter);
   });
 
-  function setResizeFormValues() {
-    resizeForm.elements['resize-x'].value = Math.round(currentResizer.getConstraint().x);
-    resizeForm.elements['resize-y'].value = Math.round(currentResizer.getConstraint().y);
-    resizeForm.elements['resize-size'].value = Math.round(currentResizer.getConstraint().side);
-  }
 
   window.addEventListener('resizerchange', function() {
     setResizeFormValues();
