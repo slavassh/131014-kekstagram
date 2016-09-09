@@ -9,15 +9,27 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
   var footer = document.querySelector('footer');
-  var pageNumber = 0;
+  var pageNumber;
   var pageSize = 12;
-  var currentFilter = 'filter-popular';
+  var currentFilter;
   var lastCall = Date.now();
-  var allPictures = [];
+  var storageFilter = localStorage;
+  var allPictures;
 
+  var DEFAULT_FILTER = 'filter-popular';
   var FULL_THROTTLE = 100;
   var GAP = 100;
   var LOAD_URL = 'api/pictures';
+
+  var setCurrentFilter = function() {
+    if(!storageFilter.getItem('filter')) {
+      currentFilter = DEFAULT_FILTER;
+    } else {
+      currentFilter = storageFilter.getItem('filter');
+      filtersMenuForm.elements[currentFilter].checked = true;
+    }
+    return renderList();
+  };
 
   var loadOnScroll = function() {
     if(Date.now() - lastCall >= FULL_THROTTLE) {
@@ -63,29 +75,30 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
       filter: loadFilter}, addImageList);
   };
 
-  var toggleFilter = function(filterID) {
-    picturesContainer.innerHTML = '';
-    allPictures = [];
-    pageNumber = 0;
-    currentFilter = filterID;
-    loadPictures(pageNumber, currentFilter);
-    window.addEventListener('scroll', loadOnScroll);
-  };
-
   filtersMenuForm.addEventListener('click', function(evt) {
-    if(evt.target.classList.contains('filters-item')) {
-      toggleFilter(evt.target.htmlFor);
+    if(evt.target.classList.contains('filters-radio')) {
+      currentFilter = evt.target.id;
+      saveFilterToStorage();
+      renderList();
     }
   });
 
+  var saveFilterToStorage = function() {
+    storageFilter.setItem('filter', currentFilter);
+  };
+
   var renderList = function() {
+    picturesContainer.innerHTML = '';
+    allPictures = [];
+    pageNumber = 0;
+
     filtersMenuForm.classList.add('hidden');
     loadPictures(pageNumber, currentFilter);
     window.addEventListener('scroll', loadOnScroll);
     filtersMenuForm.classList.remove('hidden');
   };
 
-  renderList();
+  return setCurrentFilter();
 });
 
 
