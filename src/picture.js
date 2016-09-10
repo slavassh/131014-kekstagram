@@ -6,8 +6,9 @@
 define(['./gallery'], function(Gallery) {
   var Picture = function(data, activeNumber) {
     this.data = data;
-    var self = this;
     var IMAGE_LOAD_TIMEOUT = 10000;
+    this.activePicture = activeNumber;
+
     this.elemTemplate = document.querySelector('#picture-template');
 
     if ('content' in this.elemTemplate) {
@@ -21,30 +22,30 @@ define(['./gallery'], function(Gallery) {
     this.imgElem = this.element.querySelector('img');
     this.tileImage = new Image();
 
-    this.tileImage.onload = function() {
-      self.onImageLoad();
-    };
+    this.onImageLoad = this.onImageLoad.bind(this);
+    this.tileImage.addEventListener('load', this.onImageLoad);
 
-    this.tileImage.onerror = function() {
-      self.onImageError();
-    };
+    this.onImageError = this.onImageError.bind(this);
+    this.tileImage.addEventListener('error', this.onImageError);
 
-    this.tileImage.onclick = function() {
-      self.onImageClick(activeNumber);
-      return false;
-    };
+    this.onImageClick = this.onImageClick.bind(this);
+    this.tileImage.addEventListener('click', this.onImageClick);
 
     this.tileImage.src = data.url;
 
-    this.tileTimeout = setTimeout(function() {
-      self.tileImage.src = '';
-      self.element.classList.add('picture-load-failure');
-    }, IMAGE_LOAD_TIMEOUT);
+    this.byTimeout = this.byTimeout.bind(this);
+    this.tileTimeout = setTimeout(this.byTimeout, IMAGE_LOAD_TIMEOUT);
   };
 
-  Picture.prototype.onImageClick = function(activePicture) {
-    Gallery.show(activePicture);
-    Gallery.setActivePicture(activePicture);
+  Picture.prototype.byTimeout = function() {
+    this.tileImage.src = '';
+    this.element.classList.add('picture-load-failure');
+  };
+
+  Picture.prototype.onImageClick = function() {
+    Gallery.setActivePicture(this.activePicture);
+    Gallery.show();
+    event.preventDefault();
   };
 
   Picture.prototype.onImageLoad = function() {
@@ -62,8 +63,8 @@ define(['./gallery'], function(Gallery) {
   };
 
   Picture.prototype.remove = function() {
-    this.tileImage.onload = null;
-    this.tileImage.onerror = null;
+    this.tileImage.removeEventListener('load', this.onImageClick);
+    this.tileImage.removeEventListener('error', this.onImageClick);
   };
 
   return Picture;
