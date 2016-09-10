@@ -20,12 +20,13 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   var FULL_THROTTLE = 100;
   var GAP = 100;
   var LOAD_URL = 'api/pictures';
+  var STORAGE_PROPERTY_NAME = 'filter';
 
   var setCurrentFilter = function() {
-    if(!storageFilter.getItem('filter')) {
+    if(!storageFilter.getItem(STORAGE_PROPERTY_NAME)) {
       currentFilter = DEFAULT_FILTER;
     } else {
-      currentFilter = storageFilter.getItem('filter');
+      currentFilter = storageFilter.getItem(STORAGE_PROPERTY_NAME);
       filtersMenuForm.elements[currentFilter].checked = true;
     }
     return renderList();
@@ -78,14 +79,10 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
   filtersMenuForm.addEventListener('click', function(evt) {
     if(evt.target.classList.contains('filters-radio')) {
       currentFilter = evt.target.id;
-      saveFilterToStorage();
+      storageFilter.setItem(STORAGE_PROPERTY_NAME, currentFilter);
       renderList();
     }
   });
-
-  var saveFilterToStorage = function() {
-    storageFilter.setItem('filter', currentFilter);
-  };
 
   var renderList = function() {
     picturesContainer.innerHTML = '';
