@@ -3,7 +3,7 @@
  */
 'use strict';
 
-define(['./gallery'], function(Gallery) {
+define(['./gallery', './utils', './base-component'], function(Gallery, utils, BaseComponent) {
   var Picture = function(data, activeNumber) {
     this.data = data;
     var IMAGE_LOAD_TIMEOUT = 10000;
@@ -36,6 +36,8 @@ define(['./gallery'], function(Gallery) {
     this.byTimeout = this.byTimeout.bind(this);
     this.tileTimeout = setTimeout(this.byTimeout, IMAGE_LOAD_TIMEOUT);
   };
+
+  utils(Picture, BaseComponent);
 
   Picture.prototype.byTimeout = function() {
     this.tileImage.src = '';

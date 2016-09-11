@@ -3,7 +3,7 @@
  */
 'use strict';
 
-define(function() {
+define(['./utils', './base-component'], function(utils, BaseComponent) {
   var Gallery = function() {
     this.galleryOverlay = document.querySelector('.gallery-overlay');
     this.galleryOverlayClose = this.galleryOverlay.querySelector('.gallery-overlay-close');
@@ -13,6 +13,8 @@ define(function() {
     this.onImageClick = this.onImageClick.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
   };
+
+  utils(Gallery, BaseComponent);
 
   Gallery.prototype.setPictures = function(picturesArr) {
     this.pictures = picturesArr;
