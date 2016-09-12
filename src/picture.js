@@ -5,6 +5,7 @@
 
 define(['./gallery', './utils', './base-component'], function(Gallery, utils, BaseComponent) {
   var Picture = function(data, activeNumber) {
+    BaseComponent.call(this, data, activeNumber);
     this.data = data;
     var IMAGE_LOAD_TIMEOUT = 10000;
     this.activePicture = activeNumber;

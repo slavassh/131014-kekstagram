@@ -49,6 +49,8 @@ define(['./utils', './base-component'], function(utils, BaseComponent) {
 
   Gallery.prototype.onCloseClick = function() {
     this.hide();
+    BaseComponent.prototype.remove.call(this);
+    BaseComponent.prototype.add.call(this);
   };
 
   return new Gallery();
