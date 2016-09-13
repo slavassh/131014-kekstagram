@@ -4,22 +4,16 @@
 'use strict';
 
 define(function() {
-  var BaseComponent = function(baseElement, baseContainer) {
-    this.element = baseElement;
-    console.log('Base.Element:');
-    console.dir(this.element);
-    this.container = baseContainer;
-    console.log('this.container');
-    console.dir(this.container);
+  var BaseComponent = function(element) {
+    this.element = element;
   };
 
-  BaseComponent.prototype.addElement = function() {
-    this.container.appendChild(this.element);
+  BaseComponent.prototype.addElement = function(container) {
+    container.appendChild(this.element);
   };
 
   BaseComponent.prototype.remove = function() {
     this.element.parentNode.removeChild(this.element);
-    debugger;
   };
 
   return BaseComponent;

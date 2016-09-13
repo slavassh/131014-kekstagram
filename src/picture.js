@@ -4,11 +4,9 @@
 'use strict';
 
 define(['./gallery', './utils', './base-component'], function(Gallery, utils, BaseComponent) {
-  var Picture = function(data, container, activeNumber) {
+  var Picture = function(data, activeNumber) {
 
     this.data = data;
-    console.log('Data: ');
-    console.dir(data);
 
     var IMAGE_LOAD_TIMEOUT = 10000;
     this.activePicture = activeNumber;
@@ -21,15 +19,9 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
       this.elemToClone = this.elemTemplate.querySelector('.picture');
     }
 
-    var element = this.elemToClone.cloneNode(true);
+    this.element = this.elemToClone.cloneNode(true);
 
-    this.element = element;
-    BaseComponent.call(this, element, container);
-
-    console.log('this.element: ');
-    console.dir(this.element);
-
-
+    BaseComponent.call(this, this.element);
 
     this.imgElem = this.element.querySelector('img');
     this.tileImage = new Image();
