@@ -51,8 +51,12 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     pictures = callData;
 
     pictures.forEach(function(item) {
-      var pictureElement = new Picture(item, allPictures.length);
-      picturesContainer.appendChild(pictureElement.element);
+      var pictureElement = new Picture(item, picturesContainer, allPictures.length);
+      console.log('item');
+      console.dir(item);
+      pictureElement.addElement();
+      console.log('pictureElement.element:');
+      console.dir(pictureElement.element);
       allPictures.push(item);
     });
 

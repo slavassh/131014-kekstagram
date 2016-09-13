@@ -4,9 +4,12 @@
 'use strict';
 
 define(['./gallery', './utils', './base-component'], function(Gallery, utils, BaseComponent) {
-  var Picture = function(data, activeNumber) {
-    BaseComponent.call(this, data, activeNumber);
+  var Picture = function(data, container, activeNumber) {
+
     this.data = data;
+    console.log('Data: ');
+    console.dir(data);
+
     var IMAGE_LOAD_TIMEOUT = 10000;
     this.activePicture = activeNumber;
 
@@ -18,7 +21,15 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
       this.elemToClone = this.elemTemplate.querySelector('.picture');
     }
 
-    this.element = this.elemToClone.cloneNode(true);
+    var element = this.elemToClone.cloneNode(true);
+
+    this.element = element;
+    BaseComponent.call(this, element, container);
+
+    console.log('this.element: ');
+    console.dir(this.element);
+
+
 
     this.imgElem = this.element.querySelector('img');
     this.tileImage = new Image();
@@ -46,8 +57,8 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
   };
 
   Picture.prototype.onImageClick = function() {
-    Gallery.setActivePicture(this.activePicture);
     Gallery.show();
+    Gallery.setActivePicture(this.activePicture);
     event.preventDefault();
   };
 
