@@ -9,9 +9,6 @@ define(function() {
     this.commentsCount = item.comments;
     this.createdDate = item.created;
     this.fileUrl = item.url;
-
-    console.log('constructor data');
-    console.dir(this.data);
   };
 
   PictureData.prototype.getLikesCount = function() {
