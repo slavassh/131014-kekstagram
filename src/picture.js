@@ -4,9 +4,9 @@
 'use strict';
 
 define(['./gallery', './utils', './base-component'], function(Gallery, utils, BaseComponent) {
-  var Picture = function(data, activeNumber) {
+  var Picture = function(activeNumber, pictureData) {
 
-    this.data = data;
+    this.data = pictureData;
 
     var IMAGE_LOAD_TIMEOUT = 10000;
     this.activePicture = activeNumber;
@@ -35,7 +35,7 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
     this.onImageClick = this.onImageClick.bind(this);
     this.tileImage.addEventListener('click', this.onImageClick);
 
-    this.tileImage.src = data.url;
+    this.tileImage.src = this.data.getUrl();
 
     this.byTimeout = this.byTimeout.bind(this);
     this.tileTimeout = setTimeout(this.byTimeout, IMAGE_LOAD_TIMEOUT);

@@ -4,7 +4,7 @@
 
 'use strict';
 
-define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
+define(['./load', './picture', './gallery', './picture-data'], function(load, Picture, Gallery, PictureData) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
@@ -51,7 +51,8 @@ define(['./load', './picture', './gallery'], function(load, Picture, Gallery) {
     pictures = callData;
 
     pictures.forEach(function(item) {
-      var pictureElement = new Picture(item, allPictures.length);
+      var pictureElementData = new PictureData(item);
+      var pictureElement = new Picture(allPictures.length, pictureElementData);
       pictureElement.addElement(picturesContainer);
       allPictures.push(item);
     });
