@@ -6,7 +6,7 @@
 define(function() {
   var PictureData = function(item) {
     this.likesCount = item.likes;
-    this.likeChecked = false;
+    this.likeState = false;
     this.commentsCount = item.comments;
     this.createdDate = item.created;
     this.fileUrl = item.url;
@@ -20,21 +20,21 @@ define(function() {
     return this.commentsCount;
   };
 
-  PictureData.prototype.getCreatedDate = function() {
-    return this.createdDate;
+  PictureData.prototype.getLikeState = function() {
+    return this.likeState;
   };
 
   PictureData.prototype.getUrl = function() {
     return this.fileUrl;
   };
 
-  PictureData.prototype.setLikesCount = function() {
-    if(!this.likeChecked) {
+  PictureData.prototype.setLikes = function() {
+    if(!this.likeState) {
       this.likesCount++;
     } else {
       this.likesCount--;
     }
-    this.likeChecked = !this.likeChecked;
+    this.likeState = !this.likeState;
   };
 
   PictureData.prototype.setCommentsCount = function(changedCommentsCount) {

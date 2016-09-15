@@ -54,7 +54,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
       var pictureElementData = new PictureData(item);
       var pictureElement = new Picture(allPictures.length, pictureElementData);
       pictureElement.addElement(picturesContainer);
-      allPictures.push(item);
+      allPictures.push(pictureElement);
     });
 
     if(isNextPageAvailable()) {

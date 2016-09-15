@@ -67,7 +67,7 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
 
   Picture.prototype.onPictureClick = function(evt) {
     if(evt.target.classList.contains('picture-likes')) {
-      this.data.setLikesCount();
+      this.data.setLikes();
       this.updateLikeCount();
     } else if(evt.target.classList.contains('picture-comments')) {
       this.data.setCommentsCount(this.commentElem.textContent);
