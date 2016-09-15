@@ -26,14 +26,19 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
     this.imgElem = this.element.querySelector('img');
     this.tileImage = new Image();
 
+    this.likeElem = this.element.querySelector('.picture-likes');
+    this.commentElem = this.element.querySelector('.picture-comments');
+
     this.onImageLoad = this.onImageLoad.bind(this);
     this.tileImage.addEventListener('load', this.onImageLoad);
 
     this.onImageError = this.onImageError.bind(this);
     this.tileImage.addEventListener('error', this.onImageError);
 
-    this.onImageClick = this.onImageClick.bind(this);
-    this.tileImage.addEventListener('click', this.onImageClick);
+    this.onPictureMouseOver = this.onPictureMouseOver.bind(this);
+    this.element.addEventListener('mouseover', this.onPictureMouseOver);
+
+    this.onPictureClick = this.onPictureClick.bind(this);
 
     this.tileImage.src = this.data.getUrl();
 
@@ -43,14 +48,33 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
 
   utils(Picture, BaseComponent);
 
+  Picture.prototype.onPictureMouseOver = function() {
+    this.element.addEventListener('click', this.onPictureClick);
+    if(!(this.likeElem.textContent || this.commentElem.textContent)) {
+      this.likeElem.textContent = this.data.getLikesCount();
+      this.commentElem.textContent = this.data.getCommentsCount();
+    }
+  };
+
+  Picture.prototype.updateLikeCount = function() {
+    this.likeElem.textContent = this.data.getLikesCount();
+  };
+
   Picture.prototype.byTimeout = function() {
     this.tileImage.src = '';
     this.element.classList.add('picture-load-failure');
   };
 
-  Picture.prototype.onImageClick = function() {
-    Gallery.show();
-    Gallery.setActivePicture(this.activePicture);
+  Picture.prototype.onPictureClick = function(evt) {
+    if(evt.target.classList.contains('picture-likes')) {
+      this.data.setLikesCount();
+      this.updateLikeCount();
+    } else if(evt.target.classList.contains('picture-comments')) {
+      this.data.setCommentsCount(this.commentElem.textContent);
+    } else {
+      Gallery.show();
+      Gallery.setActivePicture(this.activePicture);
+    }
     event.preventDefault();
   };
 
@@ -69,8 +93,8 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
   };
 
   Picture.prototype.remove = function() {
-    this.tileImage.removeEventListener('load', this.onImageClick);
-    this.tileImage.removeEventListener('error', this.onImageClick);
+    this.element.removeEventListener('load', this.onPictureClick);
+    this.element.removeEventListener('error', this.onPictureClick);
   };
 
   return Picture;

@@ -6,6 +6,7 @@
 define(function() {
   var PictureData = function(item) {
     this.likesCount = item.likes;
+    this.likeChecked = false;
     this.commentsCount = item.comments;
     this.createdDate = item.created;
     this.fileUrl = item.url;
@@ -16,7 +17,7 @@ define(function() {
   };
 
   PictureData.prototype.getCommentsCount = function() {
-    return this.data.comments;
+    return this.commentsCount;
   };
 
   PictureData.prototype.getCreatedDate = function() {
@@ -27,8 +28,13 @@ define(function() {
     return this.fileUrl;
   };
 
-  PictureData.prototype.setLikesCount = function(changedLikesCount) {
-    this.likesCount = changedLikesCount;
+  PictureData.prototype.setLikesCount = function() {
+    if(!this.likeChecked) {
+      this.likesCount++;
+    } else {
+      this.likesCount--;
+    }
+    this.likeChecked = !this.likeChecked;
   };
 
   PictureData.prototype.setCommentsCount = function(changedCommentsCount) {
