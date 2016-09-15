@@ -69,28 +69,15 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
-  var buttonFwd = document.querySelector('#resize-fwd');
 
-  document.querySelector('.upload-resize-controls').onchange = function() {
-    if (!resizeFormIsValid() && !buttonFwd.disabled) {
-      buttonFwd.disabled = true;
-    } else if (resizeFormIsValid() && buttonFwd.disabled) {
-      buttonFwd.disabled = false;
-    }
-  };
-
-  function resizeFormIsValid() {
-    var fieldLeft = +document.querySelector('#resize-x').value;
-    var fieldTop = +document.querySelector('#resize-y').value;
-    var fieldSide = +document.querySelector('#resize-size').value;
-
-    if (fieldLeft + fieldSide <= currentResizer._image.naturalWidth &&
-        fieldTop + fieldSide <= currentResizer._image.naturalHeight &&
-        fieldTop >= 0 && fieldLeft >= 0) {
+  var resizeFormIsValid = function() {
+    if (+fieldX.value + +fieldSide.value <= currentResizer._image.naturalWidth &&
+      +fieldY.value + +fieldSide.value <= currentResizer._image.naturalHeight &&
+      +fieldY.value >= 0 && +fieldX.value >= 0) {
       return true;
     }
     return false;
-  }
+  };
 
   /**
    * Форма загрузки изображения.
@@ -103,6 +90,16 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  var fieldX = resizeForm.elements['resize-x'];
+  var fieldY = resizeForm.elements['resize-y'];
+  var fieldSide = resizeForm.elements['resize-size'];
+
+  var setResizeFormValues = function() {
+    fieldX.value = Math.round(currentResizer.getConstraint().x);
+    fieldY.value = Math.round(currentResizer.getConstraint().y);
+    fieldSide.value = Math.round(currentResizer.getConstraint().side);
+  };
 
   /**
    * Форма добавления фильтра.
@@ -124,6 +121,25 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     filterForm.elements['upload-filter'].value = browserCookies.get('upload-filter');
     changeClassname(browserCookies.get('upload-filter'));
   }
+
+  var buttonFwd = resizeForm.querySelector('#resize-fwd');
+
+  function toggleButtonCondition() {
+    if (!resizeFormIsValid() && !buttonFwd.disabled) {
+      buttonFwd.disabled = true;
+    } else if (resizeFormIsValid() && buttonFwd.disabled) {
+      buttonFwd.disabled = false;
+    }
+  }
+
+  resizeForm.querySelector('.upload-resize-controls').addEventListener('change', function() {
+    currentResizer.setConstraint(
+      +fieldX.value,
+      +fieldY.value,
+      +fieldSide.value);
+
+    toggleButtonCondition();
+  });
 
   /**
    * @param {Action} action
@@ -161,7 +177,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * и показывается форма кадрирования.
    * @param {Event} evt
    */
-  uploadForm.onchange = function(evt) {
+  uploadForm.addEventListener('change', function(evt) {
     var element = evt.target;
     if (element.id === 'upload-file') {
       // Проверка типа загружаемого файла, тип должен быть изображением
@@ -190,14 +206,14 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
         showMessage(Action.ERROR);
       }
     }
-  };
+  });
 
   /**
    * Обработка сброса формы кадрирования. Возвращает в начальное состояние
    * и обновляет фон.
    * @param {Event} evt
    */
-  resizeForm.onreset = function(evt) {
+  resizeForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     cleanupResizer();
@@ -205,7 +221,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
 
     resizeForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Обработка отправки формы кадрирования. Если форма валидна, экспортирует
@@ -213,7 +229,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * @param {Event} evt
    */
 
-  resizeForm.onsubmit = function(evt) {
+  resizeForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     if (resizeFormIsValid()) {
@@ -229,18 +245,18 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
-  };
+  });
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
    * @param {Event} evt
    */
-  filterForm.onreset = function(evt) {
+  filterForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -259,7 +275,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   };
 
 
-  filterForm.onsubmit = function(evt) {
+  filterForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     cleanupResizer();
@@ -267,7 +283,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
@@ -289,7 +305,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     filterImage.className = 'filter-image-preview ' + filterMap[filterName];
   }
 
-  filterForm.onchange = function() {
+  filterForm.addEventListener('change', function() {
 
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
@@ -302,7 +318,13 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     // состояние или просто перезаписывать.
 
     changeClassname(selectedFilter);
-  };
+  });
+
+
+  window.addEventListener('resizerchange', function() {
+    setResizeFormValues();
+    toggleButtonCondition();
+  });
 
   cleanupResizer();
   updateBackground();
