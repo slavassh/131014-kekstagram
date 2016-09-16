@@ -13,10 +13,23 @@ define(['./utils', './base-component'], function() {
     this.onLikesClick = this.onLikesClick.bind(this);
     this.onImageClick = this.onImageClick.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
+    this.onChangeHash = this.onChangeHash.bind(this);
+    window.addEventListener('hashchange', this.onChangeHash);
   };
 
   Gallery.prototype.setPictures = function(picturesArr) {
     this.pictures = picturesArr;
+  };
+
+  Gallery.prototype.onChangeHash = function() {
+    this.getActiveFromUrl();
+  };
+
+  Gallery.prototype.getActiveFromUrl = function() {
+    if (location.hash.match(/#photo\/(\S+)/)) {
+      this.setActivePicture(location.hash.match(/#photo\/(\S+)/));
+      console.dir(location.hash.match(/#photo\/(\S+)/));
+    }
   };
 
   Gallery.prototype.show = function() {
@@ -43,8 +56,15 @@ define(['./utils', './base-component'], function() {
     }
   };
 
-  Gallery.prototype.setActivePicture = function(activeNumber) {
-    this.activePicture = activeNumber;
+  Gallery.prototype.setActivePicture = function(activePicture) {
+    if(typeof activePicture === 'number') {
+      this.activePicture = activePicture;
+    } else {
+      this.positiveArr = this.pictures.filter(function(item, i) {
+        return item.data.getUrl() === 'photos/6.jpg'; //activeUrlString;
+      });
+    }
+
     this.galleryOverlayImage.src = this.pictures[this.activePicture].data.getUrl();
     this.commentsCount.textContent = this.pictures[this.activePicture].data.getCommentsCount();
     this.updateGalleryLike();
@@ -65,6 +85,7 @@ define(['./utils', './base-component'], function() {
   };
 
   Gallery.prototype.onCloseClick = function() {
+    location.hash = null;
     this.hide();
   };
 
