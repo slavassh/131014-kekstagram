@@ -12,7 +12,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   var pageNumber;
   var pageSize = 12;
   var currentFilter;
-  var lastCall = Date.now();
+
   var storageFilter = localStorage;
   var allPictures;
 
@@ -33,13 +33,24 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   };
 
   var loadOnScroll = function() {
-    if(Date.now() - lastCall >= FULL_THROTTLE) {
-      if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
-        loadPictures(pageNumber, currentFilter);
-      }
-      lastCall = Date.now();
+    if(footer.getBoundingClientRect().bottom - window.innerHeight <= GAP) {
+      loadPictures(pageNumber, currentFilter);
     }
   };
+
+  var throttle = function(optimizedFunction, interval) {
+    var referenceTime = Date.now();
+
+    return function() {
+      var lastCall = Date.now();
+      if (lastCall - referenceTime >= interval) {
+        optimizedFunction();
+        referenceTime = Date.now();
+      }
+    };
+  };
+
+  var optimizedScroll = throttle(loadOnScroll, FULL_THROTTLE);
 
   var loadToFullPage = function() {
     if(!(isNextPageAvailable()) && footer.getBoundingClientRect().bottom - window.innerHeight <= 0) {
@@ -58,7 +69,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
     });
 
     if(isNextPageAvailable()) {
-      window.removeEventListener('scroll', loadOnScroll);
+      window.removeEventListener('scroll', optimizedScroll);
     }
     loadToFullPage();
     Gallery.setPictures(allPictures);
@@ -92,7 +103,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
 
     filtersMenuForm.classList.add('hidden');
     loadPictures(pageNumber, currentFilter);
-    window.addEventListener('scroll', loadOnScroll);
+    window.addEventListener('scroll', optimizedScroll);
     filtersMenuForm.classList.remove('hidden');
   };
 
