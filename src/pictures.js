@@ -61,8 +61,8 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
       window.removeEventListener('scroll', loadOnScroll);
     }
     loadToFullPage();
-
-    return Gallery.setPictures(allPictures);
+    Gallery.setPictures(allPictures);
+    return Gallery.restoreFromHash();
   };
 
   var isNextPageAvailable = function() {

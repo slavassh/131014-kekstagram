@@ -72,7 +72,6 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
     } else if(evt.target.classList.contains('picture-comments')) {
       this.data.setCommentsCount(this.commentElem.textContent);
     } else {
-      // Gallery.show();
       location.hash = '#photo/' + this.data.getUrl();
       Gallery.setActivePicture(this.activePicture);
     }
