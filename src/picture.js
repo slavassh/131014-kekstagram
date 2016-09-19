@@ -75,7 +75,7 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
       Gallery.show();
       Gallery.setActivePicture(this.activePicture);
     }
-    event.preventDefault();
+    evt.preventDefault();
   };
 
   Picture.prototype.onImageLoad = function() {
