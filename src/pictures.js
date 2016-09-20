@@ -12,8 +12,6 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   var pageNumber;
   var pageSize = 12;
   var currentFilter;
-
-  var storageFilter = localStorage;
   var allPictures;
 
   var DEFAULT_FILTER = 'filter-popular';
@@ -22,12 +20,26 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   var LOAD_URL = 'api/pictures';
   var STORAGE_PROPERTY_NAME = 'filter';
 
+  function storageAvailable(type) {
+    try {
+      var storage = window[type],
+        x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
   var setCurrentFilter = function() {
-    if(!storageFilter.getItem(STORAGE_PROPERTY_NAME)) {
-      currentFilter = DEFAULT_FILTER;
-    } else {
-      currentFilter = storageFilter.getItem(STORAGE_PROPERTY_NAME);
-      filtersMenuForm.elements[currentFilter].checked = true;
+    if(storageAvailable('localStorage')) {
+      if (!localStorage.getItem(STORAGE_PROPERTY_NAME)) {
+        currentFilter = DEFAULT_FILTER;
+      } else {
+        currentFilter = localStorage.getItem(STORAGE_PROPERTY_NAME);
+        filtersMenuForm.elements[currentFilter].checked = true;
+      }
     }
     return renderList();
   };
@@ -91,7 +103,9 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   filtersMenuForm.addEventListener('click', function(evt) {
     if(evt.target.classList.contains('filters-radio')) {
       currentFilter = evt.target.id;
-      storageFilter.setItem(STORAGE_PROPERTY_NAME, currentFilter);
+      if(storageAvailable('localStorage')) {
+        localStorage.setItem(STORAGE_PROPERTY_NAME, currentFilter);
+      }
       renderList();
     }
   });
