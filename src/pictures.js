@@ -4,7 +4,11 @@
 
 'use strict';
 
-define(['./load', './picture', './gallery', './picture-data'], function(load, Picture, Gallery, PictureData) {
+define(['./load',
+        './picture',
+        './gallery',
+        './picture-data',
+        './utils'], function(load, Picture, Gallery, PictureData, utils) {
   var pictures = [];
   var filtersMenuForm = document.forms[0];
   var picturesContainer = document.querySelector('.pictures');
@@ -20,20 +24,8 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   var LOAD_URL = 'api/pictures';
   var STORAGE_PROPERTY_NAME = 'filter';
 
-  function storageAvailable(type) {
-    try {
-      var storage = window[type],
-        x = '__storage_test__';
-      storage.setItem(x, x);
-      storage.removeItem(x);
-      return true;
-    } catch(e) {
-      return false;
-    }
-  }
-
   var setCurrentFilter = function() {
-    if(storageAvailable('localStorage')) {
+    if(utils.storageAvailable('localStorage')) {
       if (!localStorage.getItem(STORAGE_PROPERTY_NAME)) {
         currentFilter = DEFAULT_FILTER;
       } else {
@@ -50,19 +42,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
     }
   };
 
-  var throttle = function(optimizedFunction, interval) {
-    var referenceTime = Date.now();
-
-    return function() {
-      var lastCall = Date.now();
-      if (lastCall - referenceTime >= interval) {
-        optimizedFunction();
-        referenceTime = Date.now();
-      }
-    };
-  };
-
-  var optimizedScroll = throttle(loadOnScroll, FULL_THROTTLE);
+  var optimizedScroll = utils.throttle(loadOnScroll, FULL_THROTTLE);
 
   var loadToFullPage = function() {
     if(!(isNextPageAvailable()) && footer.getBoundingClientRect().bottom - window.innerHeight <= 0) {
@@ -103,7 +83,7 @@ define(['./load', './picture', './gallery', './picture-data'], function(load, Pi
   filtersMenuForm.addEventListener('click', function(evt) {
     if(evt.target.classList.contains('filters-radio')) {
       currentFilter = evt.target.id;
-      if(storageAvailable('localStorage')) {
+      if(utils.storageAvailable('localStorage')) {
         localStorage.setItem(STORAGE_PROPERTY_NAME, currentFilter);
       }
       renderList();

@@ -46,7 +46,7 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
     this.tileTimeout = setTimeout(this.byTimeout, IMAGE_LOAD_TIMEOUT);
   };
 
-  utils(Picture, BaseComponent);
+  utils.inherit(Picture, BaseComponent);
 
   Picture.prototype.onPictureMouseOver = function() {
     this.element.addEventListener('click', this.onPictureClick);
