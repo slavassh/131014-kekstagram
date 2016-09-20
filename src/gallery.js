@@ -77,18 +77,13 @@ define(['./utils', './base-component'], function() {
     }
   };
 
-  Gallery.prototype.pictureIncrement = function() {
-    this.activePicture++;
-    if(this.activePicture >= this.pictures.length) {
-      this.activePicture = 0;
-    }
-  };
-
   Gallery.prototype.onImageClick = function() {
-    this.pictureIncrement();
-    while(this.pictures[this.activePicture].element.classList.contains('picture-load-failure')) {
-      this.pictureIncrement();
-    }
+    do {
+      this.activePicture++;
+      if(this.activePicture >= this.pictures.length) {
+        this.activePicture = 0;
+      }
+    } while(this.pictures[this.activePicture].element.classList.contains('picture-load-failure'));
 
     location.hash = '#photo/' + this.pictures[this.activePicture].data.getUrl();
   };
