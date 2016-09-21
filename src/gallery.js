@@ -26,7 +26,7 @@ define(['./utils', './base-component'], function() {
   };
 
   Gallery.prototype.restoreFromHash = function() {
-    if (location.hash.match(/#photo\/(\S+)/)) {
+    if ((/#photo\/(\S+)/).test(location.hash)) {
       this.setActivePicture(location.hash.match(/#photo\/(\S+)/)[1]);
       this.show();
     } else if (!location.hash && !this.galleryOverlay.classList.contains('invisible')) {
