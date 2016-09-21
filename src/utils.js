@@ -11,6 +11,7 @@ define(function() {
       childComponent.prototype = new FictiveConstructor();
       childComponent.prototype.constructor = childComponent;
     },
+
     storageAvailable: function(type) {
       try {
         var storage = window[type],
@@ -22,16 +23,35 @@ define(function() {
         return false;
       }
     },
-    throttle: function(optimizedFunction, interval) {
-      var referenceTime = Date.now();
 
-      return function() {
-        var lastCall = Date.now();
-        if (lastCall - referenceTime >= interval) {
-          optimizedFunction();
-          referenceTime = Date.now();
+    throttle: function(func, ms) {
+
+      var isThrottled = false,
+        savedArgs,
+        savedThis;
+
+      function wrapper() {
+        if (isThrottled) {
+          savedArgs = arguments;
+          savedThis = this;
+          return;
         }
-      };
+
+        func.apply(this, arguments);
+        savedArgs = arguments;
+
+        isThrottled = true;
+
+        setTimeout(function() {
+          isThrottled = false;
+          if (savedArgs) {
+            wrapper.apply(savedThis, savedArgs);
+            savedArgs = savedThis = null;
+          }
+        }, ms);
+      }
+
+      return wrapper;
     }
   };
 });
