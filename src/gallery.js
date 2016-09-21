@@ -28,7 +28,7 @@ define(['./utils', './base-component'], function() {
 
   Gallery.prototype.hide = function() {
     this.galleryOverlay.classList.add('invisible');
-    this.likesCount.addEventListener('click', this.onLikesClick);
+    this.likesCount.removeEventListener('click', this.onLikesClick);
     this.galleryOverlayImage.removeEventListener('click', this.onImageClick);
     this.galleryOverlayClose.removeEventListener('click', this.onCloseClick);
   };
