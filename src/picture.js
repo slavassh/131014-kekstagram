@@ -66,6 +66,7 @@ define(['./gallery', './utils', './base-component'], function(Gallery, utils, Ba
     clearTimeout(this.tileTimeout);
     this.element.classList.add('picture-load-failure');
     this.remove();
+    BaseComponent.prototype.remove.call(this);
   };
 
   Picture.prototype.remove = function() {
