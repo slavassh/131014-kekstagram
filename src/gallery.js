@@ -3,7 +3,7 @@
  */
 'use strict';
 
-define(['./utils', './base-component'], function() {
+define(function() {
   var Gallery = function() {
     this.galleryOverlay = document.querySelector('.gallery-overlay');
     this.galleryOverlayClose = this.galleryOverlay.querySelector('.gallery-overlay-close');
