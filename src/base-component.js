@@ -12,7 +12,7 @@ define(function() {
     container.appendChild(this.element);
   };
 
-  BaseComponent.prototype.remove = function() {
+  BaseComponent.prototype.removeElement = function() {
     this.element.parentNode.removeChild(this.element);
   };
 
