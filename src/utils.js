@@ -24,34 +24,17 @@ define(function() {
       }
     },
 
-    throttle: function(func, ms) {
+    throttle: function(optimizedFunction, interval) {
+      var referenceTime = Date.now();
 
-      var isThrottled = false,
-        savedArgs,
-        savedThis;
+      return function() {
+        var lastCall = Date.now();
 
-      function wrapper() {
-        if (isThrottled) {
-          savedArgs = arguments;
-          savedThis = this;
-          return;
+        if (lastCall - referenceTime >= interval) {
+          optimizedFunction();
+          referenceTime = Date.now();
         }
-
-        func.apply(this, arguments);
-        savedArgs = arguments;
-
-        isThrottled = true;
-
-        setTimeout(function() {
-          isThrottled = false;
-          if (savedArgs) {
-            wrapper.apply(savedThis, savedArgs);
-            savedArgs = savedThis = null;
-          }
-        }, ms);
-      }
-
-      return wrapper;
+      };
     }
   };
 });
