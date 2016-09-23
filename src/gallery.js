@@ -29,7 +29,7 @@ define(function() {
     if ((/#photo\/(\S+)/).test(location.hash)) {
       this.setActivePicture(location.hash.match(/#photo\/(\S+)/)[1]);
       this.show();
-    } else if (!(/#photo\/(\S+)/).test(location.hash) && !this.galleryOverlay.classList.contains('invisible')) {
+    } else if (!this.galleryOverlay.classList.contains('invisible')) {
       this.hide();
     }
   };
